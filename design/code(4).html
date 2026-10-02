@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>FreelanceOS</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;family=Space+Grotesk:wght@700;800;900&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"outline":"#7c775f","inverse-primary":"#dec800","on-secondary":"#ffffff","primary-fixed":"#fde400","on-error":"#ffffff","accent-lavender":"#C4B5FD","secondary":"#216a51","surface-white":"#FFFFFF","on-secondary-fixed":"#002116","on-tertiary":"#ffffff","primary-fixed-dim":"#dec800","warning-tangerine":"#FFB347","on-surface":"#1b1b1b","neutral-slate":"#E2E8F0","on-primary":"#ffffff","surface-container-high":"#e8e8e8","surface-container-highest":"#e2e2e2","on-secondary-fixed-variant":"#00513b","danger-coral":"#FF708A","surface-variant":"#e2e2e2","primary":"#6a5f00","on-background":"#1b1b1b","canvas-cream":"#FDFBF7","surface-container-lowest":"#ffffff","tertiary":"#625595","inverse-surface":"#303030","on-tertiary-container":"#695c9d","surface-dim":"#dadada","secondary-container":"#a7efcf","on-error-container":"#93000a","on-primary-fixed-variant":"#504700","surface":"#f9f9f9","on-tertiary-fixed":"#1e0e4e","error":"#ba1a1a","on-tertiary-fixed-variant":"#4a3d7c","secondary-fixed":"#a9f1d1","on-primary-fixed":"#201c00","on-secondary-container":"#266e55","border-black":"#000000","outline-variant":"#cdc7aa","inverse-on-surface":"#f1f1f1","background":"#f9f9f9","on-primary-container":"#726600","success-mint":"#A8F0D0","surface-container-low":"#f3f3f3","on-surface-variant":"#4b4731","surface-container":"#eeeeee","primary-container":"#ffe600","surface-tint":"#6a5f00","error-container":"#ffdad6","warning-yellow":"#FFD166","tertiary-fixed-dim":"#ccbeff","surface-bright":"#f9f9f9","secondary-fixed-dim":"#8ed5b6","tertiary-fixed":"#e7deff","tertiary-container":"#e9e0ff"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-xl":"2rem","gutter-mobile":"1rem","space-lg":"1.5rem","space-xs":"0.25rem","margin-mobile":"1rem","space-md":"1rem","gutter":"1.5rem","space-sm":"0.5rem","margin":"2rem","space-2xl":"3rem"},fontFamily:{"data-md":["JetBrains Mono"],"headline-md":["Space Grotesk"],"headline-sm":["Space Grotesk"],"data-sm":["JetBrains Mono"],"data-lg":["JetBrains Mono"],"body-lg":["Plus Jakarta Sans"],"label-uppercase":["Space Grotesk"],"headline-lg":["Space Grotesk"],"body-md":["Plus Jakarta Sans"],"display":["Space Grotesk"],"headline-lg-mobile":["Space Grotesk"],"display-mobile":["Space Grotesk"],"body-sm":["Plus Jakarta Sans"]},fontSize:{"data-md":["16px",{"lineHeight":"22px","fontWeight":"700"}],"headline-md":["24px",{"lineHeight":"30px","letterSpacing":"-0.01em","fontWeight":"800"}],"headline-sm":["20px",{"lineHeight":"26px","fontWeight":"700"}],"data-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"600"}],"data-lg":["28px",{"lineHeight":"34px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"500"}],"label-uppercase":["12px",{"lineHeight":"16px","letterSpacing":"0.08em","fontWeight":"800"}],"headline-lg":["32px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"800"}],"body-md":["15px",{"lineHeight":"24px","fontWeight":"500"}],"display":["48px",{"lineHeight":"56px","letterSpacing":"-0.03em","fontWeight":"900"}],"headline-lg-mobile":["26px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"800"}],"display-mobile":["36px",{"lineHeight":"42px","letterSpacing":"-0.02em","fontWeight":"900"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"500"}]}}}};</script></head><body class="bg-canvas-cream font-body-md text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-border-black"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-white border-b-2 border-border-black shadow-[0_4px_0_0_#000000]"><div class="h-20 w-full max-w-[1440px] mx-auto px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="flex items-center justify-center p-1 bg-surface-white border-2 border-border-black rounded-lg shadow-[2px_2px_0_0_#000000]"><img alt="FreelanceOS Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XArAHHjevIF8ig7PZaKnKeAell4PHwwPnoYSAuTrrkFCAeWq_BoPEHnNyZZ9rkulZQO0tqly1YwTvhvDAzpyuFfO2bGO65z_LnVjcTFNUsHs4sKh2OqBepSHAH7TZrmUc6cQ6cOn9fMFnKGlbcD80tHxkmZMplBG325UygOJFm-31ENGJeg5FwIF_-8Uy6Bl-Lg6LiK4ynCY9varJUBP4gVbDrH4sTWNOTVFwvtlEUnxcs0JjWIbvYfpE"/></div><span class="font-headline-md text-headline-md tracking-tight text-on-surface">FreelanceOS</span></div><nav class="hidden xl:flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-surface font-label-uppercase text-label-uppercase border-2 border-border-black shadow-[2px_2px_0_0_#000000]"><a class="px-space-md py-space-sm rounded-lg font-label-uppercase text-label-uppercase border-2 border-transparent text-on-surface-variant hover:text-on-surface hover:border-border-black hover:bg-canvas-cream transition-all" data-path="dashboard" href="#">Dashboard</a><a class="px-space-md py-space-sm rounded-lg font-label-uppercase text-label-uppercase border-2 border-transparent text-on-surface-variant hover:text-on-surface hover:border-border-black hover:bg-canvas-cream transition-all" data-path="invoices" href="#">Invoices</a><a class="px-space-md py-space-sm rounded-lg font-label-uppercase text-label-uppercase border-2 border-transparent text-on-surface-variant hover:text-on-surface hover:border-border-black hover:bg-canvas-cream transition-all" data-path="clients" href="#">Clients</a><a class="px-space-md py-space-sm rounded-lg font-label-uppercase text-label-uppercase border-2 border-transparent text-on-surface-variant hover:text-on-surface hover:border-border-black hover:bg-canvas-cream transition-all" data-path="projects" href="#">Projects</a><a class="px-space-md py-space-sm rounded-lg font-label-uppercase text-label-uppercase border-2 border-transparent text-on-surface-variant hover:text-on-surface hover:border-border-black hover:bg-canvas-cream transition-all" data-path="reports" href="#">Reports</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden md:flex items-center gap-space-sm"><button class="bg-surface-white text-on-surface font-label-uppercase text-label-uppercase px-space-md py-2.5 rounded-xl border-2 border-border-black shadow-[4px_4px_0_0_#000000] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000000] transition-all cursor-pointer" type="button">+ Add Client</button><button class="bg-primary-container text-on-surface font-label-uppercase text-label-uppercase px-space-lg py-2.5 rounded-xl border-2 border-border-black shadow-[4px_4px_0_0_#000000] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000000] transition-all cursor-pointer" type="button">+ Issue New Invoice</button></div><div class="flex items-center gap-space-sm bg-surface-white border-2 border-border-black rounded-full py-1.5 pl-2 pr-4 shadow-[4px_4px_0_0_#000000]"><div class="relative flex items-center justify-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border-2 border-border-black" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGU6eh65nrMvySzSY7_xIsrI92LQaouvgOANq4GRZ90hU-RZIp2ylwKeEh8Vr570Vt9nVOygIc3qDQn23SE5_xqnD599ay8HI5UCLhEr_SelcCnbZ4CxFSQExbWTlaI2ormLIhj9Q38zBi_zZb4nW0x4K42vVOhwi_ahZOgocWjZ_M47n8fH2_BZJwivtP1eUPXXZCVjbUoVMx35YysAdrdHhvNUW37SLp5vmhU6SRnmKrGLuK_U5f"/><span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success-mint border-2 border-border-black rounded-full"></span></div><div class="flex flex-col text-left"><span class="font-label-uppercase text-label-uppercase leading-tight text-on-surface">Hey, Alex!</span><span class="font-data-sm text-data-sm text-secondary leading-tight">OPERATOR</span></div></div></div></div></header><main class="w-full max-w-[1440px] mx-auto pt-20 px-gutter bg-canvas-cream flex-1"><div class="flex flex-col w-full relative pb-16">
+<!-- Interactive View State Bar -->
+<div class="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-4 py-4 mb-6 border-b-2 border-border-black">
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary-container border-2 border-border-black shadow-[2px_2px_0_0_#000000] font-headline-sm text-headline-sm">
+        ❖
+      </span>
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface leading-tight tracking-tight">OPERATIONAL DIALOG SUITE</h1>
+<p class="font-data-sm text-data-sm text-on-surface-variant uppercase tracking-wider">Screen 5 • Dual Modal Staging Engine • High-Agency Workflow</p>
+</div>
+</div>
+<!-- Modal Toggle Controls -->
+<div class="flex items-center gap-2 bg-surface-white border-2 border-border-black p-1.5 rounded-xl shadow-[4px_4px_0_0_#000000]">
+<button class="px-3 py-1.5 rounded-lg border-2 border-border-black bg-primary-container font-label-uppercase text-label-uppercase shadow-[2px_2px_0_0_#000000] transition-all cursor-pointer" id="toggle-both-btn" onclick="setViewMode('both')">
+        Dual Inspection
+      </button>
+<button class="px-3 py-1.5 rounded-lg border-2 border-transparent font-label-uppercase text-label-uppercase hover:border-border-black hover:bg-canvas-cream transition-all cursor-pointer" id="toggle-client-btn" onclick="setViewMode('client')">
+        Client Modal
+      </button>
+<button class="px-3 py-1.5 rounded-lg border-2 border-transparent font-label-uppercase text-label-uppercase hover:border-border-black hover:bg-canvas-cream transition-all cursor-pointer" id="toggle-project-btn" onclick="setViewMode('project')">
+        Project Modal
+      </button>
+<span class="w-px h-5 bg-border-black mx-1"></span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success-mint border border-border-black font-data-sm text-data-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span> READY
+      </span>
+</div>
+</div>
+<!-- Background Workspace Simulation (Tactile Ledger Snapshot) -->
+<div class="relative w-full rounded-2xl border-2 border-border-black bg-surface-white p-6 shadow-[6px_6px_0_0_#000000] overflow-hidden">
+<!-- Diagonal Hatch Watermark -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #000 0, #000 2px, transparent 0, transparent 16px);"></div>
+<!-- Background Mock Header -->
+<div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b-2 border-border-black">
+<div class="flex items-center gap-4">
+<div class="px-3 py-1 bg-neutral-slate rounded-lg border-2 border-border-black font-data-sm text-data-sm">
+          DIR: /CLIENTS_LEDGER/2025
+        </div>
+<div class="font-headline-sm text-headline-sm">Active Retainer Matrix</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-data-md text-data-md bg-canvas-cream px-3 py-1 border-2 border-border-black rounded-lg">
+          TOTAL BOOKED: 842,500,000 TOM
+        </span>
+</div>
+</div>
+<!-- Active Backdrop Table Rows (Muted underneath) -->
+<div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4 opacity-40 select-none pointer-events-none filter blur-[0.5px]">
+<div class="p-4 border-2 border-border-black rounded-xl bg-canvas-cream">
+<div class="font-label-uppercase text-label-uppercase text-on-surface-variant">Client Code</div>
+<div class="font-data-md text-data-md mt-1">#CL-8891-IR</div>
+<div class="font-headline-sm text-headline-sm mt-2">Digikala Group</div>
+</div>
+<div class="p-4 border-2 border-border-black rounded-xl bg-canvas-cream">
+<div class="font-label-uppercase text-label-uppercase text-on-surface-variant">Allocated Sprints</div>
+<div class="font-data-md text-data-md mt-1">4 of 6 Active</div>
+<div class="font-headline-sm text-headline-sm mt-2">Fintech Core UI</div>
+</div>
+<div class="p-4 border-2 border-border-black rounded-xl bg-canvas-cream">
+<div class="font-label-uppercase text-label-uppercase text-on-surface-variant">National Tax Record</div>
+<div class="font-data-md text-data-md mt-1">10103490218</div>
+<div class="font-headline-sm text-headline-sm mt-2">VERIFIED CORP</div>
+</div>
+<div class="p-4 border-2 border-border-black rounded-xl bg-canvas-cream">
+<div class="font-label-uppercase text-label-uppercase text-on-surface-variant">Billing Velocity</div>
+<div class="font-data-md text-data-md mt-1">Net 15 Days</div>
+<div class="font-headline-sm text-headline-sm mt-2 text-secondary">0% Past Due</div>
+</div>
+</div>
+<!-- Dynamic Overlay Dimmer + Modals Stage Container -->
+<div class="relative mt-8 z-10 w-full min-h-[780px] bg-canvas-cream/90 backdrop-blur-sm rounded-xl border-2 border-dashed border-border-black p-4 sm:p-6 lg:p-8 flex items-start justify-center">
+<!-- Grid staging both modals side-by-side on desktop -->
+<div class="w-full grid grid-cols-1 xl:grid-cols-2 gap-8 items-start max-w-[1360px]">
+<!-- ========================================================================= -->
+<!-- MODAL 1: ADD NEW CLIENT                                                   -->
+<!-- ========================================================================= -->
+<div class="w-full bg-surface-white rounded-2xl border-[3px] border-border-black shadow-[8px_8px_0_0_#000000] overflow-hidden flex flex-col transition-all duration-200" id="modal-client-container">
+<!-- Modal Header Strip: Mint Pastel -->
+<div class="bg-success-mint px-6 py-5 border-b-[3px] border-border-black flex items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-white border-2 border-border-black shadow-[2px_2px_0_0_#000000] flex items-center justify-center">
+<span class="material-symbols-outlined text-border-black text-[22px]">person_add</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Add New Client</h2>
+<span class="font-data-sm text-data-sm px-2 py-0.5 rounded-full bg-surface-white border border-border-black">PARTNER_V1</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Onboard a corporate partner or independent account</p>
+</div>
+</div>
+<!-- Tactile Close Button -->
+<button aria-label="Close client modal" class="w-9 h-9 rounded-xl bg-surface-white border-2 border-border-black shadow-[2px_2px_0_0_#000000] hover:bg-danger-coral hover:text-surface-white active:translate-x-0.5 active:translate-y-0.5 active:shadow-[0px_0px_0_0_#000000] transition-all flex items-center justify-center font-headline-sm text-headline-sm cursor-pointer" onclick="dismissModal('modal-client-container')">
+              ✕
+            </button>
+</div>
+<!-- Modal Body Form -->
+<form class="p-6 md:p-8 flex flex-col gap-5 bg-surface-white" onsubmit="event.preventDefault(); triggerClientSave();">
+<!-- Row 1: Contact & Org Name -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center justify-between" for="client-full-name">
+<span>Primary Contact Name</span>
+<span class="font-data-sm text-data-sm text-secondary">*REQ</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-white font-body-md text-body-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all" id="client-full-name" placeholder="e.g. Reza Rostami" required="" type="text" value="Reza Rostami"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none text-[20px]">badge</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center justify-between" for="client-company-name">
+<span>Company / Legal Entity</span>
+<span class="font-data-sm text-data-sm text-secondary">*REQ</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-white font-body-md text-body-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all" id="client-company-name" placeholder="e.g. Digikala Marketplace PJSC" required="" type="text" value="Digikala Marketplace PJSC"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none text-[20px]">corporate_fare</span>
+</div>
+</div>
+</div>
+<!-- Row 2: Tax Code & Email -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center gap-1.5" for="client-tax-id">
+<span>National ID / Tax Code</span>
+<span class="font-data-sm text-data-sm text-on-surface-variant">(شناسه ملی)</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-white font-data-md text-data-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all" id="client-tax-id" placeholder="10103490218" type="text" value="10103490218"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none text-[20px]">pin</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center justify-between" for="client-email">
+<span>Email Address</span>
+<span class="font-data-sm text-data-sm text-secondary">*REQ</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-white font-body-md text-body-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all" id="client-email" placeholder="name@entity.com" required="" type="email" value="r.rostami@digikala.com"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none text-[20px]">alternate_email</span>
+</div>
+</div>
+</div>
+<!-- Row 3: Phone & Preferred Currency Pill Switcher -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface" for="client-phone">Direct Phone Number</label>
+<div class="relative">
+<input class="w-full bg-surface-white font-data-md text-data-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all" id="client-phone" placeholder="+98 ..." type="tel" value="+98 (21) 8872-9100"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none text-[20px]">call</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface">Default Ledger Currency</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="currency-pill py-2.5 px-2 rounded-xl border-2 border-border-black bg-primary-container font-data-md text-data-md text-on-surface shadow-[2px_2px_0_0_#000000] hover:-translate-y-0.5 transition-all text-center" onclick="selectCurrency(this, 'TOM')" type="button">
+                    TOM
+                  </button>
+<button class="currency-pill py-2.5 px-2 rounded-xl border-2 border-border-black bg-surface-white font-data-md text-data-md text-on-surface shadow-[2px_2px_0_0_#000000] hover:-translate-y-0.5 transition-all text-center" onclick="selectCurrency(this, 'USD')" type="button">
+                    USD
+                  </button>
+<button class="currency-pill py-2.5 px-2 rounded-xl border-2 border-border-black bg-surface-white font-data-md text-data-md text-on-surface shadow-[2px_2px_0_0_#000000] hover:-translate-y-0.5 transition-all text-center" onclick="selectCurrency(this, 'EUR')" type="button">
+                    EUR
+                  </button>
+</div>
+</div>
+</div>
+<!-- Row 4: Billing Address -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center justify-between" for="client-address">
+<span>Billing Address &amp; Dispatch Point</span>
+<span class="font-data-sm text-data-sm text-on-surface-variant">HQ RECORD</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-white font-body-md text-body-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all" id="client-address" placeholder="Street, Unit, Postal Code, City" type="text" value="Gandi South St, 15th Alley, No. 12, Tehran, Iran"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none text-[20px]">location_on</span>
+</div>
+</div>
+<!-- Row 5: Payment Terms Preference & Stamped Status -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface" for="client-terms">Payment Terms Settlement</label>
+<div class="relative">
+<select class="w-full bg-surface-white font-body-md text-body-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] appearance-none focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all cursor-pointer" id="client-terms">
+<option selected="" value="net-15">Net 15 Days (Accelerated)</option>
+<option value="net-21">Net 21 Days (Agency Standard)</option>
+<option value="net-30">Net 30 Days (Corporate Net)</option>
+<option value="receipt">Due Immediately Upon Receipt</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 text-border-black pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Quick Verification Stamp Badge -->
+<div class="flex items-center gap-3 p-3 bg-secondary-fixed border-2 border-border-black rounded-xl shadow-[2px_2px_0_0_#000000]">
+<span class="material-symbols-outlined text-secondary text-[26px]">verified</span>
+<div class="flex flex-col">
+<span class="font-label-uppercase text-label-uppercase text-secondary leading-tight">TAXPAYER VALIDATION</span>
+<span class="font-data-sm text-data-sm text-on-surface">Direct Zobaid e-Tax Sync Active</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons Footer -->
+<div class="mt-4 pt-4 border-t-2 border-border-black flex flex-col sm:flex-row items-center justify-end gap-3">
+<button class="w-full sm:w-auto px-6 py-3 rounded-xl border-2 border-border-black bg-surface-white font-label-uppercase text-label-uppercase shadow-[3px_3px_0_0_#000000] hover:bg-neutral-slate hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_0_#000000] transition-all cursor-pointer" onclick="dismissModal('modal-client-container')" type="button">
+                Cancel
+              </button>
+<button class="w-full sm:w-auto px-7 py-3 rounded-xl border-2 border-border-black bg-primary-container font-label-uppercase text-label-uppercase text-on-surface shadow-[4px_4px_0_0_#000000] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000000] transition-all flex items-center justify-center gap-2 cursor-pointer" type="submit">
+<span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+<span>Save &amp; Onboard Client</span>
+</button>
+</div>
+</form>
+</div>
+<!-- ========================================================================= -->
+<!-- MODAL 2: ADD NEW PROJECT SCOPE                                            -->
+<!-- ========================================================================= -->
+<div class="w-full bg-surface-white rounded-2xl border-[3px] border-border-black shadow-[8px_8px_0_0_#000000] overflow-hidden flex flex-col transition-all duration-200" id="modal-project-container">
+<!-- Modal Header Strip: Lavender Pop -->
+<div class="bg-accent-lavender px-6 py-5 border-b-[3px] border-border-black flex items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-white border-2 border-border-black shadow-[2px_2px_0_0_#000000] flex items-center justify-center">
+<span class="material-symbols-outlined text-border-black text-[22px]">folder_special</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Create New Project Scope</h2>
+<span class="font-data-sm text-data-sm px-2 py-0.5 rounded-full bg-surface-white border border-border-black">TRACK_2025</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Define project budget, timeline and milestone deliverable track</p>
+</div>
+</div>
+<!-- Tactile Close Button -->
+<button aria-label="Close project modal" class="w-9 h-9 rounded-xl bg-surface-white border-2 border-border-black shadow-[2px_2px_0_0_#000000] hover:bg-danger-coral hover:text-surface-white active:translate-x-0.5 active:translate-y-0.5 active:shadow-[0px_0px_0_0_#000000] transition-all flex items-center justify-center font-headline-sm text-headline-sm cursor-pointer" onclick="dismissModal('modal-project-container')">
+              ✕
+            </button>
+</div>
+<!-- Modal Body Form -->
+<form class="p-6 md:p-8 flex flex-col gap-5 bg-surface-white" onsubmit="event.preventDefault(); triggerProjectSave();">
+<!-- Row 1: Project Deliverable Title -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center justify-between" for="project-title">
+<span>Project Title / Deliverable Name</span>
+<span class="font-data-sm text-data-sm text-secondary">*PRIMARY SPEC</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-white font-body-md text-body-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all" id="project-title" placeholder="e.g. Mobile App Redesign &amp; Checkout Flow" required="" type="text" value="Core Design System Audit &amp; Token Architecture"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none text-[20px]">architecture</span>
+</div>
+</div>
+<!-- Row 2: Client Organization Selection & Milestone Billing Type -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface" for="project-client">Client Organization</label>
+<div class="relative">
+<select class="w-full bg-surface-white font-body-md text-body-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] appearance-none focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all cursor-pointer" id="project-client">
+<option selected="" value="digikala">Digikala Marketplace PJSC</option>
+<option value="snappay">SnappPay Fintech Inc.</option>
+<option value="divar">Divar Classifieds Group</option>
+<option value="cafebazaar">Cafe Bazaar Technologies</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 text-border-black pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface" for="project-billing-type">Billing Milestone Model</label>
+<div class="relative">
+<select class="w-full bg-surface-white font-body-md text-body-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] appearance-none focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all cursor-pointer" id="project-billing-type">
+<option selected="" value="fixed">Fixed Milestone Fee (Tranche Based)</option>
+<option value="hourly">Hourly Sprint Time &amp; Material</option>
+<option value="retainer">Monthly Dedicated Retainer</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 text-border-black pointer-events-none text-[20px]">account_balance_wallet</span>
+</div>
+</div>
+</div>
+<!-- Row 3: Agreed Budget & Jalali Calendar Deadline -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center justify-between" for="project-budget">
+<span>Total Agreed Budget</span>
+<span class="font-data-sm text-data-sm text-secondary">IRR/TOM</span>
+</label>
+<div class="relative flex items-center">
+<input class="w-full bg-surface-white font-data-md text-data-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all tracking-tight" id="project-budget" type="text" value="45,000,000"/>
+<span class="absolute right-3 font-data-sm text-data-sm px-2 py-1 bg-neutral-slate rounded border border-border-black">TOM</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center justify-between" for="project-deadline">
+<span>Target Deadline (Jalali)</span>
+<span class="font-data-sm text-data-sm text-on-surface-variant">SPRINT #3</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-white font-data-md text-data-md text-on-surface px-4 py-3 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all" id="project-deadline" type="text" value="1405/01/20 • Spring Sprint"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline pointer-events-none text-[20px]">event</span>
+</div>
+</div>
+</div>
+<!-- Row 4: Status Selector Pills -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center justify-between">
+<span>Initial Project Lifecycle State</span>
+<span class="font-data-sm text-data-sm text-on-surface-variant">AUTO-STAMP</span>
+</label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+<!-- In-Progress Pill (Active) -->
+<button class="status-pill px-3 py-2.5 rounded-xl border-2 border-border-black bg-primary-container shadow-[2px_2px_0_0_#000000] flex items-center justify-center gap-2 hover:-translate-y-0.5 transition-all text-left" data-color="yellow" onclick="selectStatus(this)" type="button">
+<span class="w-2.5 h-2.5 rounded-full bg-border-black"></span>
+<span class="font-label-uppercase text-label-uppercase text-on-surface">Active / In-Progress</span>
+</button>
+<!-- Sprint Planning Pill -->
+<button class="status-pill px-3 py-2.5 rounded-xl border-2 border-border-black bg-surface-white shadow-[2px_2px_0_0_#000000] flex items-center justify-center gap-2 hover:-translate-y-0.5 transition-all text-left" data-color="lavender" onclick="selectStatus(this)" type="button">
+<span class="w-2.5 h-2.5 rounded-full bg-accent-lavender border border-border-black"></span>
+<span class="font-label-uppercase text-label-uppercase text-on-surface">Sprint Planning</span>
+</button>
+<!-- Contract Review Pill -->
+<button class="status-pill px-3 py-2.5 rounded-xl border-2 border-border-black bg-surface-white shadow-[2px_2px_0_0_#000000] flex items-center justify-center gap-2 hover:-translate-y-0.5 transition-all text-left" data-color="mint" onclick="selectStatus(this)" type="button">
+<span class="w-2.5 h-2.5 rounded-full bg-success-mint border border-border-black"></span>
+<span class="font-label-uppercase text-label-uppercase text-on-surface">Contract Review</span>
+</button>
+</div>
+</div>
+<!-- Row 5: Project Scope / Description -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-uppercase text-label-uppercase text-on-surface flex items-center justify-between" for="project-desc">
+<span>Deliverable Scope &amp; Milestones Summary</span>
+<span class="font-data-sm text-data-sm text-on-surface-variant">MAX 240 CHARS</span>
+</label>
+<textarea class="w-full bg-surface-white font-body-md text-body-md text-on-surface p-3.5 rounded-xl border-2 border-border-black shadow-[2px_2px_0_0_#000000] focus:bg-canvas-cream focus:outline-none focus:shadow-[4px_4px_0_0_#000000] transition-all resize-none" id="project-desc" rows="3">Complete Figma design token migration, typography scales audit, component refactoring for Flutter &amp; React engines, and documentation handover to engineering leads.</textarea>
+</div>
+<!-- Action Buttons Footer -->
+<div class="mt-4 pt-4 border-t-2 border-border-black flex flex-col sm:flex-row items-center justify-end gap-3">
+<button class="w-full sm:w-auto px-6 py-3 rounded-xl border-2 border-border-black bg-surface-white font-label-uppercase text-label-uppercase shadow-[3px_3px_0_0_#000000] hover:bg-neutral-slate hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_0_#000000] transition-all cursor-pointer" onclick="dismissModal('modal-project-container')" type="button">
+                Cancel
+              </button>
+<button class="w-full sm:w-auto px-7 py-3 rounded-xl border-2 border-border-black bg-accent-lavender font-label-uppercase text-label-uppercase text-on-surface shadow-[4px_4px_0_0_#000000] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000000] transition-all flex items-center justify-center gap-2 cursor-pointer" type="submit">
+<span class="material-symbols-outlined text-[18px]">assignment_turned_in</span>
+<span>Create Project Scope</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- Notification Toast Element (Hidden by default, triggered on save) -->
+<div class="fixed bottom-8 right-8 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-5 py-4 bg-surface-white border-[3px] border-border-black rounded-xl shadow-[6px_6px_0_0_#000000]" id="action-toast">
+<span class="material-symbols-outlined text-secondary text-[24px]">task_alt</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm leading-tight text-on-surface" id="toast-title">Record Stamped</span>
+<span class="font-data-sm text-data-sm text-on-surface-variant" id="toast-desc">Item committed to local ledger memory</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function setViewMode(mode) {
+    const clientBox = document.getElementById('modal-client-container');
+    const projectBox = document.getElementById('modal-project-container');
+    const btnBoth = document.getElementById('toggle-both-btn');
+    const btnClient = document.getElementById('toggle-client-btn');
+    const btnProject = document.getElementById('toggle-project-btn');
+
+    // Reset button states
+    [btnBoth, btnClient, btnProject].forEach(btn => {
+      btn.className = "px-3 py-1.5 rounded-lg border-2 border-transparent font-label-uppercase text-label-uppercase hover:border-border-black hover:bg-canvas-cream transition-all cursor-pointer";
+    });
+
+    if (mode === 'both') {
+      clientBox.classList.remove('hidden');
+      projectBox.classList.remove('hidden');
+      btnBoth.className = "px-3 py-1.5 rounded-lg border-2 border-border-black bg-primary-container font-label-uppercase text-label-uppercase shadow-[2px_2px_0_0_#000000] transition-all cursor-pointer";
+    } else if (mode === 'client') {
+      clientBox.classList.remove('hidden');
+      projectBox.classList.add('hidden');
+      btnClient.className = "px-3 py-1.5 rounded-lg border-2 border-border-black bg-success-mint font-label-uppercase text-label-uppercase shadow-[2px_2px_0_0_#000000] transition-all cursor-pointer";
+    } else if (mode === 'project') {
+      clientBox.classList.add('hidden');
+      projectBox.classList.remove('hidden');
+      btnProject.className = "px-3 py-1.5 rounded-lg border-2 border-border-black bg-accent-lavender font-label-uppercase text-label-uppercase shadow-[2px_2px_0_0_#000000] transition-all cursor-pointer";
+    }
+  }
+
+  function dismissModal(modalId) {
+    const el = document.getElementById(modalId);
+    if (!el) return;
+    el.style.transform = 'scale(0.96)';
+    el.style.opacity = '0.5';
+    setTimeout(() => {
+      el.classList.add('hidden');
+      el.style.transform = '';
+      el.style.opacity = '';
+      showToast('Dialog Dismissed', 'Modal state archived. Click inspection bar to restore.');
+    }, 180);
+  }
+
+  function selectCurrency(btn, currency) {
+    document.querySelectorAll('.currency-pill').forEach(b => {
+      b.classList.remove('bg-primary-container');
+      b.classList.add('bg-surface-white');
+    });
+    btn.classList.remove('bg-surface-white');
+    btn.classList.add('bg-primary-container');
+  }
+
+  function selectStatus(btn) {
+    document.querySelectorAll('.status-pill').forEach(b => {
+      b.classList.remove('bg-primary-container', 'bg-accent-lavender', 'bg-success-mint');
+      b.classList.add('bg-surface-white');
+    });
+    const color = btn.getAttribute('data-color');
+    btn.classList.remove('bg-surface-white');
+    if (color === 'yellow') btn.classList.add('bg-primary-container');
+    if (color === 'lavender') btn.classList.add('bg-accent-lavender');
+    if (color === 'mint') btn.classList.add('bg-success-mint');
+  }
+
+  function showToast(title, msg) {
+    const toast = document.getElementById('action-toast');
+    const toastTitle = document.getElementById('toast-title');
+    const toastDesc = document.getElementById('toast-desc');
+    toastTitle.textContent = title;
+    toastDesc.textContent = msg;
+
+    toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+    toast.classList.add('translate-y-0', 'opacity-100');
+
+    setTimeout(() => {
+      toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 3200);
+  }
+
+  function triggerClientSave() {
+    const name = document.getElementById('client-company-name').value || 'New Client';
+    showToast('Client Ledger Onboarded', `${name} successfully stamped to registry.`);
+  }
+
+  function triggerProjectSave() {
+    const title = document.getElementById('project-title').value || 'New Project Scope';
+    showToast('Scope Activated', `${title.substring(0, 24)}... now tracked in sprint.`);
+  }
+</script></main><footer class="w-full border-t-2 border-border-black bg-surface-white mt-space-2xl"><div class="max-w-[1440px] mx-auto px-gutter py-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm text-on-surface">FreelanceOS</span><span class="font-data-sm text-data-sm px-2 py-0.5 bg-neutral-slate rounded-full border border-border-black">v2.4 PRO</span></div><div class="font-body-sm text-body-sm text-on-surface-variant text-center md:text-left">Engineered for independent agency operators. Precision brutalist bookkeeping.</div><div class="font-data-sm text-data-sm text-on-surface">© 2025 FreelanceOS Inc. Stamped &amp; Verified.</div></div></footer></body></html>
