@@ -5,6 +5,7 @@ import { MetricCards } from './components/dashboard/MetricCards';
 import { RecentInvoices } from './components/dashboard/RecentInvoices';
 import { ActiveProjects, StatusTicker } from './components/dashboard/ActiveProjects';
 import { InvoicesPage } from './components/invoices/InvoicesPage';
+import { InvoiceSummaryStrip } from './components/invoices/InvoiceSummaryStrip';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -242,56 +243,70 @@ export default function App() {
             onNewInvoice={() => setActionNotice('کلیک روی «صدور فاکتور جدید» از هدر فاکتورها (فاز ۴)')}
             onExportCSV={() => setActionNotice('درخواست استخراج خروجی CSV / گزارش مالی')}
           >
-            {/* کارت گزارش پیشرفت گام ۳-۱ */}
+            {/* ۱. نوار کارت‌های ۳گانه خلاصه مالی فاکتورها (گام ۳-۲) */}
+            <InvoiceSummaryStrip />
+
+            {/* ۲. کارت گزارش پیشرفت گام ۳-۲ */}
             <Card variant="default">
               <CardHeader>
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <CardTitle>گام ۳-۱: ساختار و لایه‌بندی صفحه فاکتورها (InvoicesPage.jsx)</CardTitle>
-                    <Badge variant="live">فاز ۳: گام اول</Badge>
+                    <CardTitle>گام ۳-۲: نوار سه‌گانه خلاصه مالی فاکتورها (InvoiceSummaryStrip.jsx)</CardTitle>
+                    <Badge variant="live">فاز ۳: گام دوم</Badge>
                   </div>
                   <Badge variant="paid">تکمیل شد ✓</Badge>
                 </div>
                 <CardDescription>
-                  راه‌اندازی ساختار صفحه اختصاصی فاکتورها، مسیر راهنمای Breadcrumb، متای حسابداری شمسی، دکمه‌های اکشن و ناوبری دوطرفه با پیشخوان.
+                  سه کارت نئوبروتال با خطوط فوقانی رنگی اختصاصی استیچ، مبالغ مونو، نشان‌های وضعیت و هشدارهای سررسید.
                 </CardDescription>
               </CardHeader>
 
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-2">
-                    <h4 className="font-black text-sm text-black">۱. مسیر ناوبری (Breadcrumb)</h4>
-                    <p className="text-xs text-neutral-600 leading-relaxed">
-                      نمایش موقعیت «میز کار / صورت‌حساب‌ها و دریافتی‌ها» با کادر سفید و سایه سخت نئوبروتال.
+                  <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-black text-xs text-black">۱. کل مبالغ (خط سبز)</h4>
+                      <Badge variant="paid">۱۶۲.۷ م تومان</Badge>
+                    </div>
+                    <p className="text-[11px] text-neutral-600 leading-relaxed font-semibold">
+                      مجموع ۴۲ فاکتور صادر شده به همراه درصد رشد ۱۴.۸٪ نسبت به فصل قبل.
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-2">
-                    <h4 className="font-black text-sm text-black">۲. نشان‌های متای دفتر کل</h4>
-                    <p className="text-xs text-neutral-600 leading-relaxed">
-                      پالس سبز آنلاین بودن سال مالی ۱۴۰۵ به همراه برچسب هش امنیتی دفتر مالی (#1405-INV-99F).
+
+                  <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-black text-xs text-black">۲. در انتظار واریز (خط نارنجی)</h4>
+                      <Badge variant="pending">۳۸.۲ م تومان</Badge>
+                    </div>
+                    <p className="text-[11px] text-neutral-600 leading-relaxed font-semibold">
+                      ۵ صورت‌حساب باز با نمایش میانگین دوره وصول ۱۲ روزه.
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-2">
-                    <h4 className="font-black text-sm text-black">۳. تیتر و دکمه‌های اقدام کلان</h4>
-                    <p className="text-xs text-neutral-600 leading-relaxed">
-                      بج ماژول v2.4، تیتر اصلی، دکمه خروجی CSV و دکمه صدور فاکتور جدید با سایه برجسته.
+
+                  <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-black text-xs text-black">۳. معوقات بحرانی (خط قرمز)</h4>
+                      <Badge variant="overdue">۱۸.۵ م تومان</Badge>
+                    </div>
+                    <p className="text-[11px] text-neutral-600 leading-relaxed font-semibold">
+                      ۲ فاکتور بحرانی با برچسب هشدار صریح برای پیگیری مطالبات (کافه بازار ۲۲+ روز).
                     </p>
                   </div>
                 </div>
 
                 <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-2">
-                  <p className="font-black text-sm">🚀 ۵ گام برنامه‌ریزی‌شده برای فاز ۳ (فهرست فاکتورها):</p>
+                  <p className="font-black text-sm">📌 پیشرفت فاز ۳ (فهرست فاکتورها):</p>
                   <p>• ✅ <strong>گام ۳-۱:</strong> لایه‌بندی صفحه فاکتورها، Breadcrumb، هدر و سیستم ناوبری تب‌ها</p>
-                  <p>• ⏳ <strong>گام ۳-۲:</strong> نوار ۳ کارت خلاصه شاخص‌های فاکتورها (مجموع کل، معلق، معوقات بحرانی)</p>
-                  <p>• ⏳ <strong>گام ۳-۳:</strong> کنترل‌پنل فیلتر وضعیت و جستجوی آنی (کپسول‌های وضعیت، جستجو، فیلتر کارفرما)</p>
-                  <p>• ⏳ <strong>گام ۳-۴:</strong> جدول پیشرفته فاکتورها با انتخاب دسته‌جمعی و چک‌باکس‌ها</p>
+                  <p>• ✅ <strong>گام ۳-۲:</strong> نوار ۳ کارت خلاصه شاخص‌های فاکتورها (InvoiceSummaryStrip.jsx)</p>
+                  <p>• ⏳ <strong>گام ۳-۳:</strong> کنترل‌پنل فیلتر پیشرفته (دکمه‌های کپسولی وضعیت، اینپوت جستجو، دراپ‌داون کارفرما)</p>
+                  <p>• ⏳ <strong>گام ۳-۴:</strong> جدول جامع فاکتورها با قابلیت انتخاب دسته‌جمعی و چک‌باکس‌ها</p>
                   <p>• ⏳ <strong>گام ۳-۵:</strong> نوار صفحه‌بندی نئوبروتال (Pagination) و اکشن‌های گروهی</p>
                 </div>
               </CardContent>
 
               <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
                 <span className="text-xs font-bold text-neutral-500">
-                  پیشرفت فاز ۳: گام ۱ از ۵ تکمیل شد (۲۰٪)
+                  پیشرفت فاز ۳: گام ۲ از ۵ تکمیل شد (۴۰٪)
                 </span>
                 <div className="flex gap-2">
                   <Button
@@ -299,7 +314,7 @@ export default function App() {
                     size="sm"
                     onClick={() => handleTabChange('dashboard')}
                   >
-                    بازگشت به پیشخوان اصلی ↶
+                    مشاهده پیشخوان اصلی ↶
                   </Button>
                 </div>
               </CardFooter>
