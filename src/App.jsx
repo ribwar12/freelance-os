@@ -4,18 +4,19 @@ import { HeroBanner } from './components/dashboard/HeroBanner';
 import { MetricCards } from './components/dashboard/MetricCards';
 import { RecentInvoices } from './components/dashboard/RecentInvoices';
 import { ActiveProjects, StatusTicker } from './components/dashboard/ActiveProjects';
+import { InvoicesPage } from './components/invoices/InvoicesPage';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('invoices'); // نمایش مستقیم گام ۳-۱
   const [period, setPeriod] = useState('current_month');
   const [actionNotice, setActionNotice] = useState('');
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
-    setActionNotice(`تب «${getTabName(tabId)}» انتخاب شد.`);
+    setActionNotice(`انتقال به بخش «${getTabName(tabId)}» انجام شد.`);
   };
 
   const getTabName = (id) => {
@@ -213,7 +214,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-canvas font-sans" dir="rtl">
-      {/* کامپوننت نوبار سراسری (گام ۲-۱) */}
+      {/* کامپوننت نوبار سراسری (فاز ۲ گام ۱) با پشتیبانی کامل از سوئیچ تب‌ها */}
       <Navbar
         activeTab={activeTab}
         onTabChange={handleTabChange}
@@ -222,10 +223,10 @@ export default function App() {
       />
 
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-8 space-y-6">
-        {/* اعلان اکشن تعاملی */}
+        {/* اعلان اکشن تعاملی زنده */}
         {actionNotice && (
           <div className="rounded-xl border-2 border-black bg-retro-mint p-3 text-xs md:text-sm font-black text-black shadow-retro-sm flex items-center justify-between">
-            <span>⚡ رویداد دریافتی: {actionNotice}</span>
+            <span>⚡ رویداد تعاملی: {actionNotice}</span>
             <button
               onClick={() => setActionNotice('')}
               className="text-black font-bold hover:underline px-2 cursor-pointer"
@@ -235,88 +236,141 @@ export default function App() {
           </div>
         )}
 
-        {/* ۱. بنر خوش‌آمدگویی داشبورد (گام ۲-۲) */}
-        <HeroBanner
-          userName="الکس مرادی"
-          sprintLabel="اسپرینت مهر ۱۴۰۵"
-          selectedPeriod={period}
-          onPeriodChange={(newPeriod) => {
-            setPeriod(newPeriod);
-            setActionNotice(`بازه زمانی گزارشات به «${getPeriodLabel(newPeriod)}» تغییر یافت.`);
-          }}
-          onNewInvoice={() => {
-            setActionNotice('کلیک روی «صدور فاکتور جدید» از بنر هیرو!');
-          }}
-        />
+        {/* ===================== ۱. صفحه فاکتورها (فاز ۳) ===================== */}
+        {activeTab === 'invoices' && (
+          <InvoicesPage
+            onNewInvoice={() => setActionNotice('کلیک روی «صدور فاکتور جدید» از هدر فاکتورها (فاز ۴)')}
+            onExportCSV={() => setActionNotice('درخواست استخراج خروجی CSV / گزارش مالی')}
+          >
+            {/* کارت گزارش پیشرفت گام ۳-۱ */}
+            <Card variant="default">
+              <CardHeader>
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <CardTitle>گام ۳-۱: ساختار و لایه‌بندی صفحه فاکتورها (InvoicesPage.jsx)</CardTitle>
+                    <Badge variant="live">فاز ۳: گام اول</Badge>
+                  </div>
+                  <Badge variant="paid">تکمیل شد ✓</Badge>
+                </div>
+                <CardDescription>
+                  راه‌اندازی ساختار صفحه اختصاصی فاکتورها، مسیر راهنمای Breadcrumb، متای حسابداری شمسی، دکمه‌های اکشن و ناوبری دوطرفه با پیشخوان.
+                </CardDescription>
+              </CardHeader>
 
-        {/* ۲. کارت‌های ۴گانه شاخص عملکرد مالی و کاری (گام ۲-۳) */}
-        <MetricCards metrics={metricsDataByPeriod[period]} />
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-2">
+                    <h4 className="font-black text-sm text-black">۱. مسیر ناوبری (Breadcrumb)</h4>
+                    <p className="text-xs text-neutral-600 leading-relaxed">
+                      نمایش موقعیت «میز کار / صورت‌حساب‌ها و دریافتی‌ها» با کادر سفید و سایه سخت نئوبروتال.
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-2">
+                    <h4 className="font-black text-sm text-black">۲. نشان‌های متای دفتر کل</h4>
+                    <p className="text-xs text-neutral-600 leading-relaxed">
+                      پالس سبز آنلاین بودن سال مالی ۱۴۰۵ به همراه برچسب هش امنیتی دفتر مالی (#1405-INV-99F).
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-2">
+                    <h4 className="font-black text-sm text-black">۳. تیتر و دکمه‌های اقدام کلان</h4>
+                    <p className="text-xs text-neutral-600 leading-relaxed">
+                      بج ماژول v2.4، تیتر اصلی، دکمه خروجی CSV و دکمه صدور فاکتور جدید با سایه برجسته.
+                    </p>
+                  </div>
+                </div>
 
-        {/* ۳. لایه گرید اصلی داشبورد ۸/۴ ستونی (طبق دیزاین استیچ) */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-start">
-          {/* ۸ ستون سمت راست: جدول آخرین فاکتورها (گام ۲-۴) */}
-          <div className="lg:col-span-8">
-            <RecentInvoices
-              totalCount={42}
-              onCreateInvoice={() => setActionNotice('کلیک روی «ایجاد فاکتور» از جدول فاکتورها (فاز ۴)')}
-              onViewAll={() => setActionNotice('کلیک روی «مشاهده تمام فاکتورها» (فاز ۳)')}
-              onViewInvoice={(id) => setActionNotice(`مشاهده جزئیات فاکتور ${id} (فاز ۳)`)}
+                <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-2">
+                  <p className="font-black text-sm">🚀 ۵ گام برنامه‌ریزی‌شده برای فاز ۳ (فهرست فاکتورها):</p>
+                  <p>• ✅ <strong>گام ۳-۱:</strong> لایه‌بندی صفحه فاکتورها، Breadcrumb، هدر و سیستم ناوبری تب‌ها</p>
+                  <p>• ⏳ <strong>گام ۳-۲:</strong> نوار ۳ کارت خلاصه شاخص‌های فاکتورها (مجموع کل، معلق، معوقات بحرانی)</p>
+                  <p>• ⏳ <strong>گام ۳-۳:</strong> کنترل‌پنل فیلتر وضعیت و جستجوی آنی (کپسول‌های وضعیت، جستجو، فیلتر کارفرما)</p>
+                  <p>• ⏳ <strong>گام ۳-۴:</strong> جدول پیشرفته فاکتورها با انتخاب دسته‌جمعی و چک‌باکس‌ها</p>
+                  <p>• ⏳ <strong>گام ۳-۵:</strong> نوار صفحه‌بندی نئوبروتال (Pagination) و اکشن‌های گروهی</p>
+                </div>
+              </CardContent>
+
+              <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
+                <span className="text-xs font-bold text-neutral-500">
+                  پیشرفت فاز ۳: گام ۱ از ۵ تکمیل شد (۲۰٪)
+                </span>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleTabChange('dashboard')}
+                  >
+                    بازگشت به پیشخوان اصلی ↶
+                  </Button>
+                </div>
+              </CardFooter>
+            </Card>
+          </InvoicesPage>
+        )}
+
+        {/* ===================== ۲. صفحه پیشخوان جامع (فاز ۲) ===================== */}
+        {activeTab === 'dashboard' && (
+          <>
+            {/* بنر خوش‌آمدگویی داشبورد (گام ۲-۲) */}
+            <HeroBanner
+              userName="الکس مرادی"
+              sprintLabel="اسپرینت مهر ۱۴۰۵"
+              selectedPeriod={period}
+              onPeriodChange={(newPeriod) => {
+                setPeriod(newPeriod);
+                setActionNotice(`بازه زمانی گزارشات به «${getPeriodLabel(newPeriod)}» تغییر یافت.`);
+              }}
+              onNewInvoice={() => {
+                setActionNotice('کلیک روی «صدور فاکتور جدید» از بنر هیرو!');
+              }}
             />
-          </div>
 
-          {/* ۴ ستون سمت چپ: ویجت پروژه‌های فعال (گام ۲-۵) */}
-          <div className="lg:col-span-4">
-            <ActiveProjects
-              onNewProject={() => setActionNotice('کلیک روی «شروع پروژه جدید» (فاز آینده)')}
-            />
-          </div>
-        </section>
+            {/* کارت‌های ۴گانه شاخص عملکرد مالی و کاری (گام ۲-۳) */}
+            <MetricCards metrics={metricsDataByPeriod[period]} />
 
-        {/* ۴. نوار وضعیت سیستم پایین داشبورد (گام ۲-۵) */}
-        <StatusTicker />
-
-        {/* ۵. کارت جشن تکمیل فاز ۲ 🎉 */}
-        <Card variant="mint">
-          <CardHeader>
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2">
-                <CardTitle>🏆 فاز ۲ کاملاً تکمیل شد!</CardTitle>
-                <Badge variant="paid">۱۰۰٪ ✓</Badge>
+            {/* لایه گرید اصلی داشبورد ۸/۴ ستونی */}
+            <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-start">
+              <div className="lg:col-span-8">
+                <RecentInvoices
+                  totalCount={42}
+                  onCreateInvoice={() => setActionNotice('کلیک روی «ایجاد فاکتور» از جدول فاکتورها (فاز ۴)')}
+                  onViewAll={() => handleTabChange('invoices')}
+                  onViewInvoice={(id) => setActionNotice(`مشاهده جزئیات فاکتور ${id} (فاز ۳)`)}
+                />
               </div>
-              <Badge variant="live">آماده برای فاز ۳</Badge>
-            </div>
-            <CardDescription>
-              تمام ۵ گام فاز ۲ (طراحی پیشخوان جامع فریلنسر) با موفقیت پیاده‌سازی و تست شدند.
-            </CardDescription>
-          </CardHeader>
 
-          <CardContent className="space-y-4">
-            <div className="rounded-xl border-2 border-black bg-white p-4 text-xs font-bold text-black space-y-1 shadow-retro-sm">
-              <p className="font-black">📌 چک‌لیست نهایی فاز ۲:</p>
-              <p>• ✅ گام ۲-۱: هدر ناوبری سراسری (Navbar.jsx)</p>
-              <p>• ✅ گام ۲-۲: بنر خوش‌آمدگویی و تولبار (HeroBanner.jsx)</p>
-              <p>• ✅ گام ۲-۳: کارت‌های ۴گانه شاخص عملکرد (MetricCards.jsx)</p>
-              <p>• ✅ گام ۲-۴: جدول آخرین فاکتورها (RecentInvoices.jsx)</p>
-              <p>• ✅ گام ۲-۵: ویجت پروژه‌ها و نوار وضعیت (ActiveProjects.jsx)</p>
-            </div>
+              <div className="lg:col-span-4">
+                <ActiveProjects
+                  onNewProject={() => setActionNotice('کلیک روی «شروع پروژه جدید» (فاز آینده)')}
+                />
+              </div>
+            </section>
 
-            <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-1">
-              <p className="font-black">🚀 نقشه راه فاز ۳ (صفحه فهرست و فیلتر فاکتورها):</p>
-              <p>• گام ۳-۱: لایه‌بندی صفحه مستقل فاکتورها و سیستم ناوبری بین صفحات</p>
-              <p>• گام ۳-۲: هدر صفحه فاکتورها با فیلترهای وضعیت و جستجو</p>
-              <p>• گام ۳-۳: جدول جامع فاکتورها با صفحه‌بندی (Pagination)</p>
-              <p>• گام ۳-۴: مودال جزئیات فاکتور (Invoice Detail Modal)</p>
-              <p>• گام ۳-۵: عملیات دسته‌جمعی و خروجی CSV/PDF</p>
-            </div>
-          </CardContent>
+            {/* نوار وضعیت سیستم پایین داشبورد (گام ۲-۵) */}
+            <StatusTicker />
+          </>
+        )}
 
-          <CardFooter className="justify-between border-t border-neutral-200 pt-4">
-            <span className="text-xs font-bold text-neutral-500">
-              پیشرفت کل پروژه: فاز ۲ از ۵ تکمیل شد (۴۰٪)
-            </span>
-            <Badge variant="default">در انتظار شروع فاز ۳</Badge>
-          </CardFooter>
-        </Card>
+        {/* ===================== ۳. سایر تب‌ها (مشتریان، پروژه‌ها، گزارشات) ===================== */}
+        {activeTab !== 'dashboard' && activeTab !== 'invoices' && (
+          <Card variant="default">
+            <CardHeader>
+              <CardTitle>بخش {getTabName(activeTab)}</CardTitle>
+              <CardDescription>
+                این ماژول در فازهای بعدی توسعه داده خواهد شد.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-xs font-bold text-neutral-600">
+                در حال حاضر فاز ۱ (دیزاین سیستم) و فاز ۲ (پیشخوان) کامل شده‌اند و فاز ۳ (فهرست فاکتورها) در جریان است.
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button size="sm" variant="default" onClick={() => handleTabChange('invoices')}>
+                مشاهده صفحه فاکتورها (فاز ۳)
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
       </main>
     </div>
   );
