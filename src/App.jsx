@@ -3,6 +3,7 @@ import { Navbar } from './components/layout/Navbar';
 import { HeroBanner } from './components/dashboard/HeroBanner';
 import { MetricCards } from './components/dashboard/MetricCards';
 import { RecentInvoices } from './components/dashboard/RecentInvoices';
+import { ActiveProjects, StatusTicker } from './components/dashboard/ActiveProjects';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -251,66 +252,69 @@ export default function App() {
         {/* ۲. کارت‌های ۴گانه شاخص عملکرد مالی و کاری (گام ۲-۳) */}
         <MetricCards metrics={metricsDataByPeriod[period]} />
 
-        {/* ۳. جدول آخرین فاکتورها (گام ۲-۴) */}
-        <RecentInvoices
-          totalCount={42}
-          onCreateInvoice={() => setActionNotice('کلیک روی «ایجاد فاکتور» از جدول فاکتورها (فاز ۴)')}
-          onViewAll={() => setActionNotice('کلیک روی «مشاهده تمام فاکتورها» (فاز ۳)')}
-          onViewInvoice={(id) => setActionNotice(`مشاهده جزئیات فاکتور ${id} (فاز ۳)`)}
-        />
+        {/* ۳. لایه گرید اصلی داشبورد ۸/۴ ستونی (طبق دیزاین استیچ) */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-start">
+          {/* ۸ ستون سمت راست: جدول آخرین فاکتورها (گام ۲-۴) */}
+          <div className="lg:col-span-8">
+            <RecentInvoices
+              totalCount={42}
+              onCreateInvoice={() => setActionNotice('کلیک روی «ایجاد فاکتور» از جدول فاکتورها (فاز ۴)')}
+              onViewAll={() => setActionNotice('کلیک روی «مشاهده تمام فاکتورها» (فاز ۳)')}
+              onViewInvoice={(id) => setActionNotice(`مشاهده جزئیات فاکتور ${id} (فاز ۳)`)}
+            />
+          </div>
 
-        {/* ۴. کارت معرفی و پیشرفت گام ۲-۴ */}
-        <Card variant="default">
+          {/* ۴ ستون سمت چپ: ویجت پروژه‌های فعال (گام ۲-۵) */}
+          <div className="lg:col-span-4">
+            <ActiveProjects
+              onNewProject={() => setActionNotice('کلیک روی «شروع پروژه جدید» (فاز آینده)')}
+            />
+          </div>
+        </section>
+
+        {/* ۴. نوار وضعیت سیستم پایین داشبورد (گام ۲-۵) */}
+        <StatusTicker />
+
+        {/* ۵. کارت جشن تکمیل فاز ۲ 🎉 */}
+        <Card variant="mint">
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2">
-                <CardTitle>گام ۲-۴: جدول آخرین فاکتورها (RecentInvoices.jsx)</CardTitle>
-                <Badge variant="live">فاز ۲: گام چهارم</Badge>
+                <CardTitle>🏆 فاز ۲ کاملاً تکمیل شد!</CardTitle>
+                <Badge variant="paid">۱۰۰٪ ✓</Badge>
               </div>
-              <Badge variant="paid">تکمیل شد ✓</Badge>
+              <Badge variant="live">آماده برای فاز ۳</Badge>
             </div>
             <CardDescription>
-              جدول نئوبروتال با ۶ ستون فارسی، ۵ ردیف داده نمونه، برچسب‌های رنگی وضعیت، مبالغ مونو و دکمه‌های عملیات.
+              تمام ۵ گام فاز ۲ (طراحی پیشخوان جامع فریلنسر) با موفقیت پیاده‌سازی و تست شدند.
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                <h4 className="font-black text-xs text-black">۱. هدر جدول با نشان «زنده»</h4>
-                <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                  عنوان فارسی «آخرین فاکتورها»، تگ زنده (LIVE) و لینک تعاملی ایجاد فاکتور.
-                </p>
-              </div>
-              <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                <h4 className="font-black text-xs text-black">۲. ردیف‌های تعاملی فارسی</h4>
-                <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                  ۵ فاکتور نمونه با نام‌های شرکت‌ها و استارتاپ‌های ایرانی، مبالغ تومانی و تاریخ شمسی.
-                </p>
-              </div>
-              <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                <h4 className="font-black text-xs text-black">۳. دکمه‌های عملیات هوشمند</h4>
-                <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                  بسته به وضعیت هر فاکتور دکمه‌های متفاوتی نمایش داده می‌شود (مشاهده، دانلود، یادآوری، ویرایش).
-                </p>
-              </div>
+            <div className="rounded-xl border-2 border-black bg-white p-4 text-xs font-bold text-black space-y-1 shadow-retro-sm">
+              <p className="font-black">📌 چک‌لیست نهایی فاز ۲:</p>
+              <p>• ✅ گام ۲-۱: هدر ناوبری سراسری (Navbar.jsx)</p>
+              <p>• ✅ گام ۲-۲: بنر خوش‌آمدگویی و تولبار (HeroBanner.jsx)</p>
+              <p>• ✅ گام ۲-۳: کارت‌های ۴گانه شاخص عملکرد (MetricCards.jsx)</p>
+              <p>• ✅ گام ۲-۴: جدول آخرین فاکتورها (RecentInvoices.jsx)</p>
+              <p>• ✅ گام ۲-۵: ویجت پروژه‌ها و نوار وضعیت (ActiveProjects.jsx)</p>
             </div>
 
-            <div className="rounded-xl border-2 border-black bg-white p-4 text-xs font-bold text-black space-y-1 shadow-retro-sm">
-              <p className="font-black">📌 وضعیت تکمیل فاز ۲:</p>
-              <p>• ✅ گام ۲-۱: هدر ناوبری (Navbar.jsx)</p>
-              <p>• ✅ گام ۲-۲: بنر خوش‌آمدگویی (HeroBanner.jsx)</p>
-              <p>• ✅ گام ۲-۳: کارت‌های KPI (MetricCards.jsx)</p>
-              <p>• ✅ گام ۲-۴: جدول فاکتورها (RecentInvoices.jsx)</p>
-              <p>• ⏳ گام ۲-۵: ویجت پروژه‌های فعال و نوار وضعیت (ActiveProjects.jsx)</p>
+            <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-1">
+              <p className="font-black">🚀 نقشه راه فاز ۳ (صفحه فهرست و فیلتر فاکتورها):</p>
+              <p>• گام ۳-۱: لایه‌بندی صفحه مستقل فاکتورها و سیستم ناوبری بین صفحات</p>
+              <p>• گام ۳-۲: هدر صفحه فاکتورها با فیلترهای وضعیت و جستجو</p>
+              <p>• گام ۳-۳: جدول جامع فاکتورها با صفحه‌بندی (Pagination)</p>
+              <p>• گام ۳-۴: مودال جزئیات فاکتور (Invoice Detail Modal)</p>
+              <p>• گام ۳-۵: عملیات دسته‌جمعی و خروجی CSV/PDF</p>
             </div>
           </CardContent>
 
           <CardFooter className="justify-between border-t border-neutral-200 pt-4">
             <span className="text-xs font-bold text-neutral-500">
-              پیشرفت فاز ۲: گام ۴ از ۵ تکمیل شد (۸۰٪)
+              پیشرفت کل پروژه: فاز ۲ از ۵ تکمیل شد (۴۰٪)
             </span>
-            <Badge variant="pending">در انتظار گام ۲-۵</Badge>
+            <Badge variant="default">در انتظار شروع فاز ۳</Badge>
           </CardFooter>
         </Card>
       </main>
