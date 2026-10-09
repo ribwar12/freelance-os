@@ -7,6 +7,7 @@ import { ActiveProjects, StatusTicker } from './components/dashboard/ActiveProje
 import { InvoicesPage } from './components/invoices/InvoicesPage';
 import { InvoiceSummaryStrip } from './components/invoices/InvoiceSummaryStrip';
 import { InvoiceFilters } from './components/invoices/InvoiceFilters';
+import { InvoicesTable, INITIAL_INVOICES_DATA } from './components/invoices/InvoicesTable';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -16,6 +17,10 @@ export default function App() {
   const [period, setPeriod] = useState('current_month');
   const [actionNotice, setActionNotice] = useState('');
 
+  // لیست کامل فاکتورها در استیت جهت عملیات واقعی و زنده CRUD (گام ۳-۴)
+  const [invoicesList, setInvoicesList] = useState(INITIAL_INVOICES_DATA);
+  const [selectedInvoiceIds, setSelectedInvoiceIds] = useState([]);
+
   // استیت‌های فیلتر و جستجوی فاکتورها (گام ۳-۳)
   const [invoiceStatus, setInvoiceStatus] = useState('all');
   const [invoiceSearch, setInvoiceSearch] = useState('');
@@ -23,11 +28,99 @@ export default function App() {
   const [invoiceDateRange, setInvoiceDateRange] = useState('1405_all');
   const [invoiceCurrency, setInvoiceCurrency] = useState('TOM');
 
+  // فیلتر کردن هوشمند لیست فاکتورها بر اساس استیت فیلترها و جستجو
+  const filteredInvoices = invoicesList.filter((inv) => {
+    if (invoiceStatus !== 'all' && inv.status !== invoiceStatus) {
+      return false;
+    }
+    if (invoiceSearch.trim()) {
+      const q = invoiceSearch.trim().toLowerCase();
+      const matchId = inv.id.toLowerCase().includes(q);
+      const matchClient = inv.client.toLowerCase().includes(q);
+      const matchProject = inv.project.toLowerCase().includes(q);
+      if (!matchId && !matchClient && !matchProject) return false;
+    }
+    if (invoiceClient !== 'all') {
+      const clientMap = {
+        digikala: 'دیجی‌کالا',
+        snappay: 'اسنپ‌پی',
+        cafebazaar: 'کافه بازار',
+        torob: 'ترب',
+        divar: 'دیوار',
+        alibaba: 'علی‌بابا',
+      };
+      const target = clientMap[invoiceClient];
+      if (target && !inv.client.includes(target)) return false;
+    }
+    return true;
+  });
+
+  // محاسبه پویای تعداد هر وضعیت برای بج‌های فیلتر
+  const dynamicCounts = {
+    all: invoicesList.length,
+    pending: invoicesList.filter((i) => i.status === 'pending').length,
+    paid: invoicesList.filter((i) => i.status === 'paid').length,
+    overdue: invoicesList.filter((i) => i.status === 'overdue').length,
+    draft: invoicesList.filter((i) => i.status === 'draft').length,
+  };
+
+  // توابع کنترل چک‌باکس‌ها و عملیات تکی و دسته‌جمعی
+  const handleSelectRow = (id) => {
+    setSelectedInvoiceIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedInvoiceIds.length === filteredInvoices.length) {
+      setSelectedInvoiceIds([]);
+    } else {
+      setSelectedInvoiceIds(filteredInvoices.map((i) => i.id));
+    }
+  };
+
+  const handleMarkAsPaid = (inv) => {
+    setInvoicesList((prev) =>
+      prev.map((item) =>
+        item.id === inv.id
+          ? { ...item, status: 'paid', statusLabel: 'تسویه شد', isOverdue: false }
+          : item
+      )
+    );
+    setActionNotice(`فاکتور ${inv.id} با موفقیت به وضعیت «تسویه شد» تغییر یافت! ✓`);
+  };
+
+  const handleDeleteInvoice = (inv) => {
+    setInvoicesList((prev) => prev.filter((item) => item.id !== inv.id));
+    setSelectedInvoiceIds((prev) => prev.filter((id) => id !== inv.id));
+    setActionNotice(`فاکتور ${inv.id} با موفقیت حذف شد.`);
+  };
+
+  const handleBulkAction = (action, ids) => {
+    if (action === 'paid') {
+      setInvoicesList((prev) =>
+        prev.map((item) =>
+          ids.includes(item.id)
+            ? { ...item, status: 'paid', statusLabel: 'تسویه شد', isOverdue: false }
+            : item
+        )
+      );
+      setActionNotice(`تسویه گروهی برای ${ids.length} فاکتور با موفقیت اعمال شد! ✓`);
+    } else if (action === 'delete') {
+      setInvoicesList((prev) => prev.filter((item) => !ids.includes(item.id)));
+      setActionNotice(`${ids.length} فاکتور انتخاب‌شده حذف شدند.`);
+    } else if (action === 'export') {
+      setActionNotice(`خروجی اکسل/CSV برای ${ids.length} فاکتور آماده دانلود شد.`);
+    }
+    setSelectedInvoiceIds([]);
+  };
+
   const handleResetInvoiceFilters = () => {
     setInvoiceStatus('all');
     setInvoiceSearch('');
     setInvoiceClient('all');
     setInvoiceDateRange('1405_all');
+    setSelectedInvoiceIds([]);
     setActionNotice('تمام فیلترهای صفحه فاکتورها بازنشانی شدند.');
   };
 
@@ -286,65 +379,87 @@ export default function App() {
                 setInvoiceCurrency(curr);
                 setActionNotice(`واحد پولی به «${curr}» تغییر یافت.`);
               }}
+              counts={dynamicCounts}
               onResetFilters={handleResetInvoiceFilters}
             />
 
-            {/* ۳. کارت گزارش پیشرفت گام ۳-۳ */}
+            {/* ۳. جدول جامع فاکتورها با انتخاب دسته‌جمعی و چک‌باکس‌ها (گام ۳-۴) */}
+            <InvoicesTable
+              invoices={filteredInvoices}
+              selectedIds={selectedInvoiceIds}
+              onSelectRow={handleSelectRow}
+              onSelectAll={handleSelectAll}
+              onMarkAsPaid={handleMarkAsPaid}
+              onDeleteInvoice={handleDeleteInvoice}
+              onBulkAction={handleBulkAction}
+              onViewInvoice={(inv) => setActionNotice(`مشاهده جزئیات فاکتور ${inv.id}`)}
+              onEditInvoice={(inv) => setActionNotice(`ویرایش اطلاعات فاکتور ${inv.id}`)}
+              onRefresh={() => {
+                setInvoicesList(INITIAL_INVOICES_DATA);
+                setSelectedInvoiceIds([]);
+                setActionNotice('داده‌های جدول فاکتورها با موفقیت تازه‌سازی شدند! 🔄');
+              }}
+            />
+
+            {/* ۴. کارت گزارش پیشرفت گام ۳-۴ */}
             <Card variant="default">
               <CardHeader>
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <CardTitle>گام ۳-۳: کنترل‌پنل فیلتر و جستجوی پیشرفته (InvoiceFilters.jsx)</CardTitle>
-                    <Badge variant="live">فاز ۳: گام سوم</Badge>
+                    <CardTitle>گام ۳-۴: جدول جامع فاکتورها با انتخاب چندتایی (InvoicesTable.jsx)</CardTitle>
+                    <Badge variant="live">فاز ۳: گام چهارم</Badge>
                   </div>
                   <Badge variant="paid">تکمیل شد ✓</Badge>
                 </div>
                 <CardDescription>
-                  کنترل‌پنل فیلتر وضعیت کپسولی، اینپوت جستجوی متنی زنده با میانبر، دراپ‌داون کارفرمایان، سوئیچ ارز و دکمه پاکسازی.
+                  جدول داده نئوبروتال با هدر اطلاعات زنده، چک‌باکس انتخاب همه، نوار عملیات دسته‌جمعی شناور و قابلیت تسویه و حذف فوری.
                 </CardDescription>
               </CardHeader>
 
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                    <h4 className="font-black text-xs text-black">۱. کپسول‌های وضعیت (Pills)</h4>
+                    <h4 className="font-black text-xs text-black">۱. انتخاب تکی و گروهی</h4>
                     <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                      فیلتر سریع بر اساس همه (۴۲)، در انتظار (۵)، پرداخت شده (۳۴)، معوقه (۲) و پیش‌نویس (۱).
+                      چک‌باکس اختصاصی برای هر ردیف و چک‌باکس سراسری در هدر با استایل نئوبروتال.
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                    <h4 className="font-black text-xs text-black">۲. جستجوی متنی زنده</h4>
+                    <h4 className="font-black text-xs text-black">۲. نوار اکشن‌های گروهی</h4>
                     <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                      اینپوت با میانبر Ctrl+K برای جستجوی فوری نام شرکت، کد فاکتور یا پروژه.
+                      با تیک زدن فاکتورها، نوار زرد رنگ تسویه گروهی، خروجی و حذف دسته‌جمعی ظاهر می‌شود.
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                    <h4 className="font-black text-xs text-black">۳. فیلترهای کشویی</h4>
+                    <h4 className="font-black text-xs text-black">۳. عملیات واقعی زنده (CRUD)</h4>
                     <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                      انتخاب دوره مالی و فیلتر سازمان کارفرما (اسنپ‌پی، دیجی‌کالا، بازار و...).
+                      دکمه‌های تسویه (✓) و حذف (🗑️) واقعاً استیت برنامه و شمارنده‌های فیلتر را تغییر می‌دهند.
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                    <h4 className="font-black text-xs text-black">۴. سوئیچ ارز و ریست</h4>
+                    <h4 className="font-black text-xs text-black">۴. اتصال بی‌درنگ به فیلترها</h4>
                     <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                      تبدیل بین تومان، دلار و یورو به همراه دکمه پاکسازی سریع فیلترها.
+                      با تایپ در باکس جستجو یا کلیک روی کپسول‌های وضعیت، جدول بلافاصله فیلتر می‌شود.
                     </p>
                   </div>
                 </div>
 
-                <div className="rounded-xl border-2 border-black bg-retro-mint/30 p-4 text-xs font-bold text-black space-y-1 shadow-retro-sm">
-                  <p className="font-black">📌 مقادیر کنونی فیلترها در استیت (Live State):</p>
-                  <p>• وضعیت فعال: <span className="bg-white px-2 py-0.5 rounded border border-black font-mono font-black">{invoiceStatus}</span> | عبارت جستجو: <span className="bg-white px-2 py-0.5 rounded border border-black font-black">{invoiceSearch || '(خالی)'}</span> | کارفرما: <span className="bg-white px-2 py-0.5 rounded border border-black font-mono font-black">{invoiceClient}</span> | ارز: <span className="bg-white px-2 py-0.5 rounded border border-black font-mono font-black">{invoiceCurrency}</span></p>
-                  <p>• گام بعدی (۳-۴): ساخت جدول کامل فاکتورها (InvoicesTable.jsx) با قابلیت چک‌باکس انتخاب دسته‌جمعی و ستون‌های مرتب‌سازی.</p>
+                <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-1">
+                  <p className="font-black">📌 پیشرفت فاز ۳ (فهرست فاکتورها):</p>
+                  <p>• ✅ گام ۳-۱: لایه‌بندی صفحه فاکتورها و سیستم ناوبری</p>
+                  <p>• ✅ گام ۳-۲: نوار ۳ کارت خلاصه شاخص‌های مالی فاکتورها</p>
+                  <p>• ✅ گام ۳-۳: کنترل‌پنل فیلتر پیشرفته و جستجوی زنده</p>
+                  <p>• ✅ گام ۳-۴: جدول جامع فاکتورها با انتخاب دسته‌جمعی و چک‌باکس‌ها</p>
+                  <p>• ⏳ گام ۳-۵ (گام بعدی): نوار صفحه‌بندی نئوبروتال (Pagination) و پایان فاز ۳</p>
                 </div>
               </CardContent>
 
               <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
                 <span className="text-xs font-bold text-neutral-500">
-                  پیشرفت فاز ۳: گام ۳ از ۵ تکمیل شد (۶۰٪)
+                  پیشرفت فاز ۳: گام ۴ از ۵ تکمیل شد (۸۰٪)
                 </span>
                 <div className="flex gap-2">
                   <Button
