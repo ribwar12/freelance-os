@@ -230,11 +230,10 @@ export function InvoicesTable({
                 return (
                   <tr
                     key={inv.id}
-                    className={`transition-colors ${
-                      isSelected
+                    className={`transition-colors ${isSelected
                         ? 'bg-retro-yellow/20'
                         : 'hover:bg-retro-yellow/10'
-                    }`}
+                      }`}
                   >
                     {/* چک‌باکس ردیف */}
                     <td className="py-3.5 pr-4 pl-2 text-center">
@@ -294,11 +293,10 @@ export function InvoicesTable({
                     {/* تاریخ سررسید */}
                     <td className="py-3.5 px-3 font-mono">
                       <span
-                        className={`px-1.5 py-0.5 rounded border border-black ${
-                          inv.isOverdue
+                        className={`px-1.5 py-0.5 rounded border border-black ${inv.isOverdue
                             ? 'bg-retro-coral text-black font-black'
                             : 'bg-canvas text-black'
-                        }`}
+                          }`}
                       >
                         {inv.dueDate}
                       </span>

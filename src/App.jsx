@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
-import { HeroBanner } from './components/dashboard/HeroBanner';
-import { MetricCards } from './components/dashboard/MetricCards';
-import { RecentInvoices } from './components/dashboard/RecentInvoices';
-import { ActiveProjects, StatusTicker } from './components/dashboard/ActiveProjects';
+import { DashboardPage } from './components/dashboard/DashboardPage';
 import { InvoicesPage } from './components/invoices/InvoicesPage';
 import { InvoiceSummaryStrip } from './components/invoices/InvoiceSummaryStrip';
 import { InvoiceFilters } from './components/invoices/InvoiceFilters';
@@ -13,7 +11,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Badge } from './components/ui/Badge';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('invoices'); // نمایش مستقیم گام‌های فاز ۳
+  const navigate = useNavigate();
   const [period, setPeriod] = useState('current_month');
   const [actionNotice, setActionNotice] = useState('');
 
@@ -122,32 +120,6 @@ export default function App() {
     setInvoiceDateRange('1405_all');
     setSelectedInvoiceIds([]);
     setActionNotice('تمام فیلترهای صفحه فاکتورها بازنشانی شدند.');
-  };
-
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
-    setActionNotice(`انتقال به بخش «${getTabName(tabId)}» انجام شد.`);
-  };
-
-  const getTabName = (id) => {
-    const map = {
-      dashboard: 'پیشخوان',
-      invoices: 'فاکتورها',
-      clients: 'مشتریان',
-      projects: 'پروژه‌ها',
-      reports: 'گزارشات',
-    };
-    return map[id] || id;
-  };
-
-  const getPeriodLabel = (val) => {
-    const map = {
-      current_month: 'این ماه (مهر ۱۴۰۵)',
-      last_month: 'ماه قبل (شهریور ۱۴۰۵)',
-      quarter: 'فصل جاری (پاییز ۱۴۰۵)',
-      year: 'سال مالی ۱۴۰۵',
-    };
-    return map[val] || val;
   };
 
   // داده‌های پویا متناسب با دوره زمانی انتخاب‌شده
@@ -324,12 +296,16 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-canvas font-sans" dir="rtl">
-      {/* کامپوننت نوبار سراسری (فاز ۲ گام ۱) با پشتیبانی کامل از سوئیچ تب‌ها */}
+      {/* کامپوننت نوبار سراسری مجهز به React Router NavLink */}
       <Navbar
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        onNewInvoice={() => setActionNotice('کلیک روی «صدور فاکتور جدید» از نوبار (فاز ۴)')}
-        onNewClient={() => setActionNotice('کلیک روی «مشتری جدید» از نوبار (فاز ۵)')}
+        onNewInvoice={() => {
+          navigate('/invoices');
+          setActionNotice('انتقال به بخش صدور فاکتور جدید');
+        }}
+        onNewClient={() => {
+          navigate('/clients');
+          setActionNotice('انتقال به بخش ثبت مشتری جدید');
+        }}
       />
 
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-8 space-y-6">
@@ -346,199 +322,234 @@ export default function App() {
           </div>
         )}
 
-        {/* ===================== ۱. صفحه فاکتورها (فاز ۳) ===================== */}
-        {activeTab === 'invoices' && (
-          <InvoicesPage
-            onNewInvoice={() => setActionNotice('کلیک روی «صدور فاکتور جدید» از هدر فاکتورها (فاز ۴)')}
-            onExportCSV={() => setActionNotice('درخواست استخراج خروجی CSV / گزارش مالی')}
-          >
-            {/* ۱. نوار کارت‌های ۳گانه خلاصه مالی فاکتورها (گام ۳-۲) */}
-            <InvoiceSummaryStrip />
+        {/* تعریف روت‌های استاندارد صنعتی React Router */}
+        <Routes>
+          {/* روت اصلی: پیشخوان جامع (/) */}
+          <Route
+            path="/"
+            element={
+              <DashboardPage
+                period={period}
+                onPeriodChange={setPeriod}
+                metricsDataByPeriod={metricsDataByPeriod}
+                onActionNotice={setActionNotice}
+              />
+            }
+          />
 
-            {/* ۲. جعبه‌ابزار کنترل، فیلتر وضعیت و جستجوی پیشرفته (گام ۳-۳) */}
-            <InvoiceFilters
-              statusFilter={invoiceStatus}
-              onStatusChange={(status) => {
-                setInvoiceStatus(status);
-                setActionNotice(`فیلتر وضعیت روی «${status}» تنظیم شد.`);
-              }}
-              searchQuery={invoiceSearch}
-              onSearchChange={(q) => setInvoiceSearch(q)}
-              selectedClient={invoiceClient}
-              onClientChange={(client) => {
-                setInvoiceClient(client);
-                setActionNotice(`فیلتر کارفرما روی «${client}» تنظیم شد.`);
-              }}
-              selectedDateRange={invoiceDateRange}
-              onDateRangeChange={(range) => {
-                setInvoiceDateRange(range);
-                setActionNotice(`بازه زمانی روی «${range}» تنظیم شد.`);
-              }}
-              currency={invoiceCurrency}
-              onCurrencyChange={(curr) => {
-                setInvoiceCurrency(curr);
-                setActionNotice(`واحد پولی به «${curr}» تغییر یافت.`);
-              }}
-              counts={dynamicCounts}
-              onResetFilters={handleResetInvoiceFilters}
-            />
+          {/* روت دوم: فهرست و فیلتر فاکتورها (/invoices) */}
+          <Route
+            path="/invoices"
+            element={
+              <InvoicesPage
+                onNewInvoice={() => setActionNotice('کلیک روی «صدور فاکتور جدید» از هدر فاکتورها (فاز ۴)')}
+                onExportCSV={() => setActionNotice('درخواست استخراج خروجی CSV / گزارش مالی')}
+              >
+                {/* ۱. نوار کارت‌های ۳گانه خلاصه مالی فاکتورها (گام ۳-۲) */}
+                <InvoiceSummaryStrip />
 
-            {/* ۳. جدول جامع فاکتورها با انتخاب دسته‌جمعی و چک‌باکس‌ها (گام ۳-۴) */}
-            <InvoicesTable
-              invoices={filteredInvoices}
-              selectedIds={selectedInvoiceIds}
-              onSelectRow={handleSelectRow}
-              onSelectAll={handleSelectAll}
-              onMarkAsPaid={handleMarkAsPaid}
-              onDeleteInvoice={handleDeleteInvoice}
-              onBulkAction={handleBulkAction}
-              onViewInvoice={(inv) => setActionNotice(`مشاهده جزئیات فاکتور ${inv.id}`)}
-              onEditInvoice={(inv) => setActionNotice(`ویرایش اطلاعات فاکتور ${inv.id}`)}
-              onRefresh={() => {
-                setInvoicesList(INITIAL_INVOICES_DATA);
-                setSelectedInvoiceIds([]);
-                setActionNotice('داده‌های جدول فاکتورها با موفقیت تازه‌سازی شدند! 🔄');
-              }}
-            />
+                {/* ۲. جعبه‌ابزار کنترل، فیلتر وضعیت و جستجوی پیشرفته (گام ۳-۳) */}
+                <InvoiceFilters
+                  statusFilter={invoiceStatus}
+                  onStatusChange={(status) => {
+                    setInvoiceStatus(status);
+                    setActionNotice(`فیلتر وضعیت روی «${status}» تنظیم شد.`);
+                  }}
+                  searchQuery={invoiceSearch}
+                  onSearchChange={(q) => setInvoiceSearch(q)}
+                  selectedClient={invoiceClient}
+                  onClientChange={(client) => {
+                    setInvoiceClient(client);
+                    setActionNotice(`فیلتر کارفرما روی «${client}» تنظیم شد.`);
+                  }}
+                  selectedDateRange={invoiceDateRange}
+                  onDateRangeChange={(range) => {
+                    setInvoiceDateRange(range);
+                    setActionNotice(`بازه زمانی روی «${range}» تنظیم شد.`);
+                  }}
+                  currency={invoiceCurrency}
+                  onCurrencyChange={(curr) => {
+                    setInvoiceCurrency(curr);
+                    setActionNotice(`واحد پولی به «${curr}» تغییر یافت.`);
+                  }}
+                  counts={dynamicCounts}
+                  onResetFilters={handleResetInvoiceFilters}
+                />
 
-            {/* ۴. کارت گزارش پیشرفت گام ۳-۴ */}
-            <Card variant="default">
-              <CardHeader>
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div className="flex items-center gap-2">
-                    <CardTitle>گام ۳-۴: جدول جامع فاکتورها با انتخاب چندتایی (InvoicesTable.jsx)</CardTitle>
-                    <Badge variant="live">فاز ۳: گام چهارم</Badge>
-                  </div>
-                  <Badge variant="paid">تکمیل شد ✓</Badge>
-                </div>
-                <CardDescription>
-                  جدول داده نئوبروتال با هدر اطلاعات زنده، چک‌باکس انتخاب همه، نوار عملیات دسته‌جمعی شناور و قابلیت تسویه و حذف فوری.
-                </CardDescription>
-              </CardHeader>
+                {/* ۳. جدول جامع فاکتورها با انتخاب دسته‌جمعی و چک‌باکس‌ها (گام ۳-۴) */}
+                <InvoicesTable
+                  invoices={filteredInvoices}
+                  selectedIds={selectedInvoiceIds}
+                  onSelectRow={handleSelectRow}
+                  onSelectAll={handleSelectAll}
+                  onMarkAsPaid={handleMarkAsPaid}
+                  onDeleteInvoice={handleDeleteInvoice}
+                  onBulkAction={handleBulkAction}
+                  onViewInvoice={(inv) => setActionNotice(`مشاهده جزئیات فاکتور ${inv.id}`)}
+                  onEditInvoice={(inv) => setActionNotice(`ویرایش اطلاعات فاکتور ${inv.id}`)}
+                  onRefresh={() => {
+                    setInvoicesList(INITIAL_INVOICES_DATA);
+                    setSelectedInvoiceIds([]);
+                    setActionNotice('داده‌های جدول فاکتورها با موفقیت تازه‌سازی شدند! 🔄');
+                  }}
+                />
 
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                    <h4 className="font-black text-xs text-black">۱. انتخاب تکی و گروهی</h4>
-                    <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                      چک‌باکس اختصاصی برای هر ردیف و چک‌باکس سراسری در هدر با استایل نئوبروتال.
-                    </p>
-                  </div>
+                {/* ۴. کارت گزارش پیشرفت گام ۳-۴ */}
+                <Card variant="default">
+                  <CardHeader>
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
+                        <CardTitle>گام ۳-۴: جدول جامع فاکتورها با روتینگ واقعی (InvoicesTable.jsx)</CardTitle>
+                        <Badge variant="live">فاز ۳: گام چهارم</Badge>
+                      </div>
+                      <Badge variant="paid">React Router فعال شد ✓</Badge>
+                    </div>
+                    <CardDescription>
+                      سیستم روتینگ واقعی SPA فعال است: آدرس بار مرورگر روی <code>/invoices</code> تنظیم شده و دکمه بازگشت مرورگر کار می‌کند.
+                    </CardDescription>
+                  </CardHeader>
 
-                  <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                    <h4 className="font-black text-xs text-black">۲. نوار اکشن‌های گروهی</h4>
-                    <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                      با تیک زدن فاکتورها، نوار زرد رنگ تسویه گروهی، خروجی و حذف دسته‌جمعی ظاهر می‌شود.
-                    </p>
-                  </div>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
+                        <h4 className="font-black text-xs text-black">۱. آدرس بار واقعی مرورگر</h4>
+                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                          با کلیک روی تب‌ها، آدرس بین <code>/</code> و <code>/invoices</code> عوض می‌شود.
+                        </p>
+                      </div>
 
-                  <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                    <h4 className="font-black text-xs text-black">۳. عملیات واقعی زنده (CRUD)</h4>
-                    <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                      دکمه‌های تسویه (✓) و حذف (🗑️) واقعاً استیت برنامه و شمارنده‌های فیلتر را تغییر می‌دهند.
-                    </p>
-                  </div>
+                      <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
+                        <h4 className="font-black text-xs text-black">۲. دکمه Back مرورگر</h4>
+                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                          با دکمه قبلی/بعدی مرورگر تاریخچه روت‌ها به درستی پیمایش می‌شود.
+                        </p>
+                      </div>
 
-                  <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                    <h4 className="font-black text-xs text-black">۴. اتصال بی‌درنگ به فیلترها</h4>
-                    <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                      با تایپ در باکس جستجو یا کلیک روی کپسول‌های وضعیت، جدول بلافاصله فیلتر می‌شود.
-                    </p>
-                  </div>
-                </div>
+                      <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
+                        <h4 className="font-black text-xs text-black">۳. کامپوننت NavLink</h4>
+                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                          نوبار استایل فعال بودن (پس‌زمینه زرد نئوبروتال) را خودکار مدیریت می‌کند.
+                        </p>
+                      </div>
 
-                <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-1">
-                  <p className="font-black">📌 پیشرفت فاز ۳ (فهرست فاکتورها):</p>
-                  <p>• ✅ گام ۳-۱: لایه‌بندی صفحه فاکتورها و سیستم ناوبری</p>
-                  <p>• ✅ گام ۳-۲: نوار ۳ کارت خلاصه شاخص‌های مالی فاکتورها</p>
-                  <p>• ✅ گام ۳-۳: کنترل‌پنل فیلتر پیشرفته و جستجوی زنده</p>
-                  <p>• ✅ گام ۳-۴: جدول جامع فاکتورها با انتخاب دسته‌جمعی و چک‌باکس‌ها</p>
-                  <p>• ⏳ گام ۳-۵ (گام بعدی): نوار صفحه‌بندی نئوبروتال (Pagination) و پایان فاز ۳</p>
-                </div>
-              </CardContent>
+                      <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
+                        <h4 className="font-black text-xs text-black">۴. آماده دیپلوی استاندارد</h4>
+                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                          کانفیگ <code>vercel.json</code> برای جلوگیری از خطای ۴۰۴ در زمان رفرش اضافه شد.
+                        </p>
+                      </div>
+                    </div>
 
-              <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
-                <span className="text-xs font-bold text-neutral-500">
-                  پیشرفت فاز ۳: گام ۴ از ۵ تکمیل شد (۸۰٪)
-                </span>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleTabChange('dashboard')}
-                  >
-                    مشاهده پیشخوان اصلی ↶
+                    <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-1">
+                      <p className="font-black">📌 پیشرفت فاز ۳ (فهرست فاکتورها):</p>
+                      <p>• ✅ گام ۳-۱: لایه‌بندی صفحه فاکتورها و سیستم ناوبری</p>
+                      <p>• ✅ گام ۳-۲: نوار ۳ کارت خلاصه شاخص‌های مالی فاکتورها</p>
+                      <p>• ✅ گام ۳-۳: کنترل‌پنل فیلتر پیشرفته و جستجوی زنده</p>
+                      <p>• ✅ گام ۳-۴: جدول جامع فاکتورها + روتینگ کامل صنعتی React Router v6</p>
+                      <p>• ⏳ گام ۳-۵ (گام بعدی): نوار صفحه‌بندی نئوبروتال (Pagination) و پایان فاز ۳</p>
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
+                    <span className="text-xs font-bold text-neutral-500">
+                      پیشرفت فاز ۳: گام ۴ از ۵ تکمیل شد (۸۰٪)
+                    </span>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate('/')}
+                      >
+                        بازگشت به پیشخوان اصلی ↶
+                      </Button>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </InvoicesPage>
+            }
+          />
+
+          {/* روت مشتریان (/clients) */}
+          <Route
+            path="/clients"
+            element={
+              <Card variant="default">
+                <CardHeader>
+                  <CardTitle>بخش مشتریان (/clients)</CardTitle>
+                  <CardDescription>
+                    ماژول مدیریت کارفرمایان و باشگاه مشتریان استودیو (در فاز ۵ تکمیل خواهد شد).
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs font-bold text-neutral-600">
+                    این مسیر با React Router فعال است. می‌توانید به پیشخوان یا فاکتورها برگردید.
+                  </p>
+                </CardContent>
+                <CardFooter className="gap-2">
+                  <Button size="sm" variant="default" onClick={() => navigate('/invoices')}>
+                    مشاهده فاکتورها (/invoices)
                   </Button>
-                </div>
-              </CardFooter>
-            </Card>
-          </InvoicesPage>
-        )}
+                  <Button size="sm" variant="outline" onClick={() => navigate('/')}>
+                    پیشخوان اصلی (/)
+                  </Button>
+                </CardFooter>
+              </Card>
+            }
+          />
 
-        {/* ===================== ۲. صفحه پیشخوان جامع (فاز ۲) ===================== */}
-        {activeTab === 'dashboard' && (
-          <>
-            {/* بنر خوش‌آمدگویی داشبورد (گام ۲-۲) */}
-            <HeroBanner
-              userName="الکس مرادی"
-              sprintLabel="اسپرینت مهر ۱۴۰۵"
-              selectedPeriod={period}
-              onPeriodChange={(newPeriod) => {
-                setPeriod(newPeriod);
-                setActionNotice(`بازه زمانی گزارشات به «${getPeriodLabel(newPeriod)}» تغییر یافت.`);
-              }}
-              onNewInvoice={() => {
-                setActionNotice('کلیک روی «صدور فاکتور جدید» از بنر هیرو!');
-              }}
-            />
+          {/* روت پروژه‌ها (/projects) */}
+          <Route
+            path="/projects"
+            element={
+              <Card variant="default">
+                <CardHeader>
+                  <CardTitle>بخش پروژه‌ها (/projects)</CardTitle>
+                  <CardDescription>
+                    پایپ‌لاین اسپرینت‌ها و ددلاین‌های تحویل استودیو.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs font-bold text-neutral-600">
+                    ویجت خلاصه پروژه‌های فعال در پیشخوان اصلی قرار دارد.
+                  </p>
+                </CardContent>
+                <CardFooter className="gap-2">
+                  <Button size="sm" variant="default" onClick={() => navigate('/')}>
+                    مشاهده پیشخوان (/)
+                  </Button>
+                </CardFooter>
+              </Card>
+            }
+          />
 
-            {/* کارت‌های ۴گانه شاخص عملکرد مالی و کاری (گام ۲-۳) */}
-            <MetricCards metrics={metricsDataByPeriod[period]} />
+          {/* روت گزارشات (/reports) */}
+          <Route
+            path="/reports"
+            element={
+              <Card variant="default">
+                <CardHeader>
+                  <CardTitle>بخش گزارشات (/reports)</CardTitle>
+                  <CardDescription>
+                    آنالیز مالی، رشد فصلی و گزارشات ارزش افزوده.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs font-bold text-neutral-600">
+                    کارت‌های شاخص عملکرد زنده در پیشخوان فعال هستند.
+                  </p>
+                </CardContent>
+                <CardFooter className="gap-2">
+                  <Button size="sm" variant="default" onClick={() => navigate('/')}>
+                    مشاهده پیشخوان (/)
+                  </Button>
+                </CardFooter>
+              </Card>
+            }
+          />
 
-            {/* لایه گرید اصلی داشبورد ۸/۴ ستونی */}
-            <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-start">
-              <div className="lg:col-span-8">
-                <RecentInvoices
-                  totalCount={42}
-                  onCreateInvoice={() => setActionNotice('کلیک روی «ایجاد فاکتور» از جدول فاکتورها (فاز ۴)')}
-                  onViewAll={() => handleTabChange('invoices')}
-                  onViewInvoice={(id) => setActionNotice(`مشاهده جزئیات فاکتور ${id} (فاز ۳)`)}
-                />
-              </div>
-
-              <div className="lg:col-span-4">
-                <ActiveProjects
-                  onNewProject={() => setActionNotice('کلیک روی «شروع پروژه جدید» (فاز آینده)')}
-                />
-              </div>
-            </section>
-
-            {/* نوار وضعیت سیستم پایین داشبورد (گام ۲-۵) */}
-            <StatusTicker />
-          </>
-        )}
-
-        {/* ===================== ۳. سایر تب‌ها (مشتریان، پروژه‌ها، گزارشات) ===================== */}
-        {activeTab !== 'dashboard' && activeTab !== 'invoices' && (
-          <Card variant="default">
-            <CardHeader>
-              <CardTitle>بخش {getTabName(activeTab)}</CardTitle>
-              <CardDescription>
-                این ماژول در فازهای بعدی توسعه داده خواهد شد.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs font-bold text-neutral-600">
-                در حال حاضر فاز ۱ (دیزاین سیستم) و فاز ۲ (پیشخوان) کامل شده‌اند و فاز ۳ (فهرست فاکتورها) در جریان است.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button size="sm" variant="default" onClick={() => handleTabChange('invoices')}>
-                مشاهده صفحه فاکتورها (فاز ۳)
-              </Button>
-            </CardFooter>
-          </Card>
-        )}
+          {/* هر مسیر تعریف‌نشده به پیشخوان هدایت می‌شود */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
     </div>
   );

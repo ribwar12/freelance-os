@@ -1,13 +1,14 @@
 import React from 'react';
+import { NavLink, Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 
-export function Navbar({ activeTab = 'dashboard', onTabChange, onNewInvoice, onNewClient }) {
+export function Navbar({ onNewInvoice, onNewClient }) {
   const navItems = [
-    { id: 'dashboard', label: 'پیشخوان' },
-    { id: 'invoices', label: 'فاکتورها' },
-    { id: 'clients', label: 'مشتریان' },
-    { id: 'projects', label: 'پروژه‌ها' },
-    { id: 'reports', label: 'گزارشات' },
+    { id: 'dashboard', path: '/', label: 'پیشخوان', end: true },
+    { id: 'invoices', path: '/invoices', label: 'فاکتورها' },
+    { id: 'clients', path: '/clients', label: 'مشتریان' },
+    { id: 'projects', path: '/projects', label: 'پروژه‌ها' },
+    { id: 'reports', path: '/reports', label: 'گزارشات' },
   ];
 
   return (
@@ -15,30 +16,33 @@ export function Navbar({ activeTab = 'dashboard', onTabChange, onNewInvoice, onN
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-18 py-3 flex items-center justify-between gap-4">
         {/* سمت راست: لوگو و لینک‌های صفحات */}
         <div className="flex items-center gap-6">
-          {/* لوگوی زرد نئوبروتال */}
-          <div className="flex items-center gap-2.5 cursor-pointer select-none">
+          {/* لوگوی زرد نئوبروتال متصل به روت اصلی */}
+          <Link to="/" className="flex items-center gap-2.5 cursor-pointer select-none">
             <div className="h-10 w-10 rounded-xl bg-retro-yellow border-2 border-black flex items-center justify-center font-black text-sm shadow-retro-sm">
               FL
             </div>
             <span className="font-black text-lg md:text-xl tracking-tight text-black font-mono">
               Freelance<span className="bg-retro-yellow px-1 rounded border border-black">OS</span>
             </span>
-          </div>
+          </Link>
 
-          {/* تب‌های ناوبری دسکتاپ */}
+          {/* تب‌های ناوبری دسکتاپ با NavLink استاندارد */}
           <nav className="hidden md:flex items-center gap-1.5 mr-2">
             {navItems.map((item) => (
-              <button
+              <NavLink
                 key={item.id}
-                onClick={() => onTabChange && onTabChange(item.id)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs md:text-sm font-black border-2 border-black transition-all cursor-pointer ${
-                  activeTab === item.id
-                    ? 'bg-retro-yellow text-black shadow-retro-sm'
-                    : 'bg-white text-black hover:bg-neutral-100 shadow-none'
-                }`}
+                to={item.path}
+                end={item.end}
+                className={({ isActive }) =>
+                  `px-3.5 py-1.5 rounded-xl text-xs md:text-sm font-black border-2 border-black transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-retro-yellow text-black shadow-retro-sm'
+                      : 'bg-white text-black hover:bg-neutral-100 shadow-none'
+                  }`
+                }
               >
                 {item.label}
-              </button>
+              </NavLink>
             ))}
           </nav>
         </div>

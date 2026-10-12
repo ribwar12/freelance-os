@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 
 export function InvoicesPage({
@@ -12,9 +13,12 @@ export function InvoicesPage({
       <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
         {/* مسیر جاری */}
         <div className="flex items-center gap-2 text-xs font-black text-neutral-600">
-          <span className="cursor-pointer hover:text-black transition-colors">
+          <Link
+            to="/"
+            className="cursor-pointer hover:text-black hover:underline transition-colors"
+          >
             میز کار
-          </span>
+          </Link>
           <span className="text-neutral-400">/</span>
           <span className="text-black bg-white px-2.5 py-1 border-2 border-black rounded-lg shadow-retro-sm">
             صورت‌حساب‌ها و دریافتی‌ها
