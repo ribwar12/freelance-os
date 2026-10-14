@@ -34,16 +34,21 @@ function InvoicePrintRouteWrapper({ invoicesList, onBack, onSendDirect }) {
     }
   }
 
+  const clientInfo = CLIENT_OPTIONS.find(
+    (c) => c.name === found?.client || c.id === found?.client || (found?.client && c.name.includes(found.client))
+  );
+
   const invoiceData = found
     ? {
         id: found.id,
         client: found.client,
-        clientCompany: found.clientCompany || `${found.client} (سهامی خاص)`,
-        clientDept: found.clientDept || 'مرکز توسعه تجربه محصول و هسته دیزاین سیستم',
-        clientAttn: found.clientAttn || 'رضا رستمی (مدیر ارشد محصول)',
-        clientNationalId: found.clientNationalId || '۱۰۱۰۳۴۹۰۲۱۸',
-        clientEcoCode: found.clientEcoCode || '۴۱۱۳۸۹۷۴۵۱۹۲',
-        clientAddress: found.clientAddress || 'تهران، خیابان ولیعصر، بالاتر از ظفر، پلاک ۱۰۲',
+        clientCompany: clientInfo?.company || found.clientCompany || `${found.client} (سهامی خاص)`,
+        clientDept: clientInfo?.dept || found.clientDept || 'مرکز توسعه تجربه محصول و هسته دیزاین سیستم',
+        clientAttn: clientInfo?.attn || found.clientAttn || 'مهندس رضا رستمی (مدیر ارشد محصول)',
+        clientNationalId: clientInfo?.nationalId || found.clientNationalId || '۱۰۱۰۳۴۹۰۲۱۸',
+        clientEcoCode: clientInfo?.ecoCode || found.clientEcoCode || '۴۱۱۳۸۹۷۴۵۱۹۲',
+        clientAddress: clientInfo?.address || found.clientAddress || 'تهران، خیابان ولیعصر، بالاتر از ظفر، پلاک ۱۰۲',
+        clientPhone: clientInfo?.phone || '۰۲۱-۶۱۹۳۰۰۰۰',
         issueDate: found.issueDate || '۱۴۰۵/۰۷/۲۳',
         dueDate: found.dueDate || '۱۴۰۵/۰۸/۱۴',
         gregorianDate: '2026-10-15',

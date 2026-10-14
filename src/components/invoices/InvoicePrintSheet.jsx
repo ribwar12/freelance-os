@@ -205,40 +205,50 @@ export function InvoicePrintSheet({
           {/* --------------------------------------------------------------------- */}
           <section className="border-b-[3px] border-black pb-6 mb-6">
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-              {/* سمت راست: هویت برند استودیو و کدهای ثبت اقتصادی */}
+              {/* سمت راست: هویت برند استودیو صادرکننده و کدهای ثبت اقتصادی */}
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-12 h-12 rounded-xl bg-retro-yellow border-2 border-black flex items-center justify-center font-mono font-black text-2xl shadow-[2px_2px_0_0_#000000] shrink-0">
                     ⚡
                   </div>
                   <div>
-                    <span className="font-mono text-xl font-black block text-black leading-tight">
-                      FreelanceOS Studio
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xl font-black block text-black leading-tight">
+                        FreelanceOS Studio
+                      </span>
+                      <span className="font-mono text-[9px] font-black px-1.5 py-0.5 bg-black text-white rounded">
+                        IR-TAX REGISTERED
+                      </span>
+                    </div>
                     <span className="text-xs text-neutral-600 font-bold block mt-0.5">
-                      استودیو مستقل طراحی سیستم‌های نرم‌افزاری و دیزاین‌سیستم
+                      استودیو مستقل طراحی سیستم‌های نرم‌افزاری و دیزاین‌سیستم‌های مقیاس‌پذیر
                     </span>
                   </div>
                 </div>
 
                 <div className="space-y-1 text-xs text-neutral-800 font-bold">
-                  <p className="font-black text-black text-sm">
-                    الکس مرادی — معمار ارشد سیستم‌های دیزاین و نرم‌افزار
+                  <p className="font-black text-black text-sm flex items-center gap-1.5">
+                    <span>الکس مرادی — معمار ارشد سیستم‌های دیزاین و نرم‌افزار</span>
+                    <span className="text-[10px] text-neutral-500 font-mono font-normal">(Alex Moradi)</span>
                   </p>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-neutral-600 mt-1">
                     <span>
-                      <strong className="text-black">شناسه ملی:</strong> ۰۰۱-۹۸۲۴۱۰-۳
+                      <strong className="text-black">کد ملی:</strong> ۰۰۱-۹۸۲۴۱۰-۳
                     </span>
                     <span>
                       <strong className="text-black">کد اقتصادی:</strong> IR-98442011
                     </span>
+                    <span>
+                      <strong className="text-black">پرونده مالیاتی:</strong> IR-TX-440912
+                    </span>
                   </div>
                   <p className="text-neutral-600">
-                    تهران، خیابان نلسون ماندلا (جردن)، برج فناوری، طبقه ۴، واحد ۴۰۲
+                    تهران، بلوار نلسون ماندلا (جردن)، برج فناوری، طبقه ۴، واحد ۴۰۲
                   </p>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-neutral-600">
                     <span>alex@freelanceos.design</span>
                     <span>۰۲۱-۸۸۷۲۹۱۰۰</span>
+                    <span>کد پستی: ۱۹۱۷۷-۳۸۱۱۲</span>
                   </div>
                 </div>
               </div>
@@ -248,12 +258,19 @@ export function InvoicePrintSheet({
                 <div className="absolute top-0 left-0 right-0 h-2 bg-retro-yellow border-b-2 border-black"></div>
                 <div className="pt-1">
                   <div className="flex items-center justify-between border-b-2 border-black pb-2 mb-2.5">
-                    <span className="font-mono text-sm font-black uppercase tracking-tight text-black">
-                      صورت‌حساب رسمی
-                    </span>
-                    <span className="font-mono text-[10px] font-black px-2 py-0.5 bg-neutral-200 rounded border border-black text-black">
-                      TAX INVOICE
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-mono text-sm font-black uppercase tracking-tight text-black">
+                        صورت‌حساب رسمی
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="font-mono text-[10px] font-black px-1.5 py-0.5 bg-neutral-200 rounded border border-black text-black">
+                        ماده ۱۶۹ م.م
+                      </span>
+                      <span className="font-mono text-[10px] font-black px-1.5 py-0.5 bg-retro-mint rounded border border-black text-emerald-950">
+                        رسمی
+                      </span>
+                    </div>
                   </div>
 
                   <div className="space-y-1.5 font-mono text-xs">
@@ -277,7 +294,7 @@ export function InvoicePrintSheet({
                     </div>
                     <div className="flex justify-between items-center border-t border-black pt-1.5 mt-1.5">
                       <span className="text-neutral-600 font-bold">واحد ارزی:</span>
-                      <span className="font-black text-black">{activeInvoice.currency}</span>
+                      <span className="font-black text-black">{activeInvoice.currency} (تومان)</span>
                     </div>
                   </div>
                 </div>
@@ -292,25 +309,32 @@ export function InvoicePrintSheet({
             {/* کارت صادرکننده خدمت (PROVIDER) */}
             <div className="bg-white border-2 border-black rounded-xl p-4 shadow-[3px_3px_0_0_#000000]">
               <div className="flex items-center justify-between pb-2 mb-2.5 border-b-2 border-black">
-                <span className="font-mono text-[11px] font-black text-black">
-                  صادرکننده / مجری (ISSUED BY)
+                <span className="font-mono text-[11px] font-black text-black flex items-center gap-1.5">
+                  <span>💼</span>
+                  <span>صادرکننده و مجری خدمت (ISSUED BY - PROVIDER)</span>
                 </span>
-                <span className="font-mono text-[10px] font-bold px-2 py-0.5 bg-retro-mint rounded-full border border-black text-emerald-950">
-                  مؤدی مالیاتی تأییدشده ✓
+                <span className="font-mono text-[10px] font-black px-2 py-0.5 bg-retro-mint rounded-full border border-black text-emerald-950 shadow-[1px_1px_0_0_#000000]">
+                  مؤدی تأییدشده شاپرک و امور مالیاتی ✓
                 </span>
               </div>
               <div className="space-y-1 text-xs">
                 <p className="font-black text-black text-sm">الکس مرادی</p>
-                <p className="font-bold text-neutral-600">استودیو طراحی سیستم‌های نرم‌افزاری</p>
-                <div className="pt-1.5 font-mono text-[11px] space-y-0.5 text-neutral-600 font-bold">
-                  <div>
-                    <strong className="text-black">کد ملی:</strong> ۰۰۱-۹۸۲۴۱۰-۳
+                <p className="font-bold text-neutral-600">استودیو طراحی سیستم‌های نرم‌افزاری FreelanceOS</p>
+                <div className="pt-2 font-mono text-[11px] space-y-1 text-neutral-700 font-bold">
+                  <div className="flex justify-between items-center bg-canvas p-1.5 rounded border border-black/40">
+                    <span className="text-neutral-500">کد ملی صادرکننده:</span>
+                    <span className="font-black text-black">۰۰۱-۹۸۲۴۱۰-۳</span>
                   </div>
-                  <div>
-                    <strong className="text-black">نشانی دفتر:</strong> تهران، جردن، برج فناوری، واحد ۴۰۲
+                  <div className="flex justify-between items-center bg-canvas p-1.5 rounded border border-black/40">
+                    <span className="text-neutral-500">کد اقتصادی مؤدی:</span>
+                    <span className="font-black text-black">IR-98442011</span>
                   </div>
-                  <div>
-                    <strong className="text-black">کد پستی:</strong> ۱۹۱۷۷-۳۸۱۱۲
+                  <div className="pt-0.5">
+                    <strong className="text-black">نشانی دفتر مرکزی:</strong> تهران، بلوار نلسون ماندلا (جردن)، برج فناوری، واحد ۴۰۲
+                  </div>
+                  <div className="flex justify-between items-center text-neutral-600 pt-0.5">
+                    <span>کد پستی: ۱۹۱۷۷-۳۸۱۱۲</span>
+                    <span>تلفن: ۰۲۱-۸۸۷۲۹۱۰۰</span>
                   </div>
                 </div>
               </div>
@@ -319,26 +343,38 @@ export function InvoicePrintSheet({
             {/* کارت خریدار / کارفرما (BILLED TO) */}
             <div className="bg-canvas border-2 border-black rounded-xl p-4 shadow-[3px_3px_0_0_#000000]">
               <div className="flex items-center justify-between pb-2 mb-2.5 border-b-2 border-black">
-                <span className="font-mono text-[11px] font-black text-black">
-                  خریدار / کارفرما (BILLED TO)
+                <span className="font-mono text-[11px] font-black text-black flex items-center gap-1.5">
+                  <span>🏢</span>
+                  <span>خریدار و طرف قرارداد (BILLED TO - CLIENT)</span>
                 </span>
-                <span className="font-mono text-[10px] font-bold px-2 py-0.5 bg-retro-yellow rounded border border-black text-black">
-                  شخصیت حقوقی معتبر
+                <span className="font-mono text-[10px] font-black px-2 py-0.5 bg-retro-yellow rounded border border-black text-black shadow-[1px_1px_0_0_#000000]">
+                  شخصیت حقوقی معتبر (CORPORATE PJSC)
                 </span>
               </div>
               <div className="space-y-1 text-xs">
                 <p className="font-black text-black text-sm">{activeInvoice.clientCompany}</p>
                 <p className="font-bold text-neutral-600">{activeInvoice.clientDept}</p>
-                <div className="pt-1.5 font-mono text-[11px] space-y-0.5 text-neutral-600 font-bold">
-                  <div>
-                    <strong className="text-black">به توجه:</strong> {activeInvoice.clientAttn}
+                <div className="pt-2 font-mono text-[11px] space-y-1 text-neutral-700 font-bold">
+                  <div className="flex justify-between items-center bg-white p-1.5 rounded border border-black/40">
+                    <span className="text-neutral-500">نماینده مجاز / به توجه:</span>
+                    <span className="font-black text-black">{activeInvoice.clientAttn}</span>
                   </div>
-                  <div>
-                    <strong className="text-black">شناسه ملی:</strong> {activeInvoice.clientNationalId} •{' '}
-                    <strong className="text-black">کد اقتصادی:</strong> {activeInvoice.clientEcoCode}
+                  <div className="grid grid-cols-2 gap-1.5">
+                    <div className="bg-white p-1.5 rounded border border-black/40 flex justify-between items-center">
+                      <span className="text-neutral-500 text-[10px]">شناسه ملی:</span>
+                      <span className="font-black text-black text-[11px]">{activeInvoice.clientNationalId}</span>
+                    </div>
+                    <div className="bg-white p-1.5 rounded border border-black/40 flex justify-between items-center">
+                      <span className="text-neutral-500 text-[10px]">کد اقتصادی:</span>
+                      <span className="font-black text-black text-[11px]">{activeInvoice.clientEcoCode}</span>
+                    </div>
                   </div>
-                  <div>
-                    <strong className="text-black">نشانی قانونی:</strong> {activeInvoice.clientAddress}
+                  <div className="pt-0.5">
+                    <strong className="text-black">نشانی قانونی خریدار:</strong> {activeInvoice.clientAddress}
+                  </div>
+                  <div className="flex justify-between items-center text-neutral-600 pt-0.5">
+                    <span>تلفن تماس: {activeInvoice.clientPhone || '۰۲۱-۶۱۹۳۰۰۰۰'}</span>
+                    <span>پشتیبانی مالیاتی: معتبر</span>
                   </div>
                 </div>
               </div>
