@@ -13,6 +13,15 @@ export function InvoicePrintSheet({
 }) {
   // استیت کنترل زوم بوم A4 در نمایشگر
   const [zoom, setZoom] = useState(100);
+  const [copiedField, setCopiedField] = useState(null);
+
+  const handleCopy = (text, fieldName) => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(text);
+      setCopiedField(fieldName);
+      setTimeout(() => setCopiedField(null), 2500);
+    }
+  };
 
   // داده‌های پیش‌فرض منطبق بر استاندارد فاکتور رسمی نمایشگاه کار مهر ۱۴۰۵
   const activeInvoice = invoice || {
@@ -392,7 +401,7 @@ export function InvoicePrintSheet({
                     <tr className="bg-canvas border-b-2 border-black font-mono text-xs font-black text-black">
                       <th className="py-2.5 px-3 w-12 text-center border-l-2 border-black">#</th>
                       <th className="py-2.5 px-4 border-l-2 border-black">
-                        شرح تعهدات، اقلام تحویلی و مشخصات فنی مهندسی
+                        شرح تعهدات، اقلام تحویلی و مشخصات فنی مهندسی (Deliverables Scope & Specs)
                       </th>
                       <th className="py-2.5 px-3 w-28 text-center border-l-2 border-black">
                         مقدار / واحد
@@ -414,7 +423,7 @@ export function InvoicePrintSheet({
                         <td className="py-3.5 px-4 border-l-2 border-black align-top space-y-1">
                           <p className="font-black text-black text-sm">{item.title}</p>
                           <p className="text-neutral-600 font-normal leading-relaxed text-[11px]">
-                            {item.specs}
+                            {item.specs || 'طراحی و پیاده‌سازی سیستم‌های دیزاین، بازبینی معماری کامپوننت‌ها و تحویل نیازمندی‌های قراردادی پروژه.'}
                           </p>
                         </td>
                         <td className="py-3.5 px-3 text-center font-mono text-xs border-l-2 border-black align-top font-black">
@@ -429,6 +438,19 @@ export function InvoicePrintSheet({
                       </tr>
                     ))}
                   </tbody>
+                  <tfoot>
+                    <tr className="bg-canvas/80 border-t-2 border-black font-mono text-[11px] font-bold text-neutral-600">
+                      <td colSpan={3} className="py-2 px-4 border-l-2 border-black">
+                        جمع کل اقلام تعهد شده: {toPersianDigits(activeInvoice.items.length)} ردیف رسمی • تسویه بر مبنای تحویل نیازمندی‌های فاز ۲
+                      </td>
+                      <td className="py-2 px-3 text-left border-l-2 border-black text-black font-black">
+                        جمع ناخالص:
+                      </td>
+                      <td className="py-2 px-4 text-left text-black font-black font-mono text-xs">
+                        {formatToman(activeInvoice.subtotal)} {activeInvoice.currency}
+                      </td>
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
             </div>
@@ -444,45 +466,73 @@ export function InvoicePrintSheet({
                 <div className="flex items-center justify-between pb-2 mb-2.5 border-b-2 border-black">
                   <span className="font-mono text-xs font-black text-black flex items-center gap-1.5">
                     <span>🏦</span>
-                    <span>کانال تسویه حساب و شماره شبا رسمی</span>
+                    <span>کانال تسویه حساب و شماره شبا رسمی (Payment & Settlement Instructions)</span>
                   </span>
-                  <span className="font-mono text-[10px] font-bold text-emerald-800 bg-retro-mint px-1.5 py-0.5 rounded border border-black">
+                  <span className="font-mono text-[10px] font-bold text-emerald-800 bg-retro-mint px-1.5 py-0.5 rounded border border-black shadow-[1px_1px_0_0_#000000]">
                     پایا / ساتنا شتاب
                   </span>
                 </div>
 
                 <div className="space-y-2 text-xs">
-                  <div className="bg-canvas p-2 rounded-lg border border-black">
-                    <span className="font-mono text-[10px] text-neutral-500 block font-bold">
-                      شماره شبا (IBAN / SHEBA):
-                    </span>
-                    <span className="font-mono text-xs font-black text-black select-all tracking-wider dir-ltr block text-left">
-                      {activeInvoice.sheba}
-                    </span>
+                  {/* ردیف شبا همراه با دکمه کپی */}
+                  <div className="bg-canvas p-2.5 rounded-lg border border-black flex items-center justify-between">
+                    <div>
+                      <span className="font-mono text-[10px] text-neutral-500 block font-bold">
+                        شماره شبا رسمی (IBAN / SHEBA Code):
+                      </span>
+                      <span className="font-mono text-xs font-black text-black select-all tracking-wider dir-ltr block text-left">
+                        {activeInvoice.sheba}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(activeInvoice.sheba, 'sheba')}
+                      className={`print:hidden px-2.5 py-1 text-[10px] font-mono font-black rounded border border-black shadow-[1px_1px_0_0_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer ${
+                        copiedField === 'sheba'
+                          ? 'bg-retro-mint text-emerald-950 font-black'
+                          : 'bg-white hover:bg-neutral-100 text-black'
+                      }`}
+                    >
+                      {copiedField === 'sheba' ? 'کپی شد! ✓' : 'کپی شبا 📋'}
+                    </button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 font-mono text-xs">
                     <div className="bg-canvas p-2 rounded-lg border border-black">
-                      <span className="text-[10px] text-neutral-500 block font-bold">نام صاحب حساب:</span>
+                      <span className="text-[10px] text-neutral-500 block font-bold">نام صاحب حساب (Beneficiary):</span>
                       <strong className="text-black">{activeInvoice.beneficiary}</strong>
                     </div>
                     <div className="bg-canvas p-2 rounded-lg border border-black">
-                      <span className="text-[10px] text-neutral-500 block font-bold">بانک عامل:</span>
+                      <span className="text-[10px] text-neutral-500 block font-bold">بانک و شعبه عامل (Bank & Branch):</span>
                       <strong className="text-black">{activeInvoice.bank}</strong>
                     </div>
                   </div>
 
-                  <div className="bg-canvas p-2 rounded-lg border border-black font-mono text-xs flex justify-between items-center">
-                    <span className="text-[10px] text-neutral-500 font-bold">شماره کارت متصل:</span>
-                    <span className="font-black text-black tracking-wider dir-ltr">
-                      {activeInvoice.cardNumber}
-                    </span>
+                  {/* ردیف شماره کارت همراه با دکمه کپی */}
+                  <div className="bg-canvas p-2.5 rounded-lg border border-black font-mono text-xs flex justify-between items-center">
+                    <div>
+                      <span className="text-[10px] text-neutral-500 font-bold block">شماره کارت متصل به حساب:</span>
+                      <span className="font-black text-black tracking-wider dir-ltr text-left block">
+                        {activeInvoice.cardNumber}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(activeInvoice.cardNumber.replace(/\s+/g, ''), 'card')}
+                      className={`print:hidden px-2.5 py-1 text-[10px] font-mono font-black rounded border border-black shadow-[1px_1px_0_0_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer ${
+                        copiedField === 'card'
+                          ? 'bg-retro-mint text-emerald-950 font-black'
+                          : 'bg-white hover:bg-neutral-100 text-black'
+                      }`}
+                    >
+                      {copiedField === 'card' ? 'کپی شد! ✓' : 'کپی کارت 💳'}
+                    </button>
                   </div>
                 </div>
               </div>
 
               <div className="mt-3 pt-2.5 border-t border-neutral-200 text-neutral-600 font-mono text-[11px] font-bold">
-                <span className="font-black text-black">یادداشت انتقال:</span> لطفاً در فیلد بابت انتقال
+                <span className="font-black text-black">یادداشت انتقال (Transfer Memo):</span> لطفاً در فیلد بابت انتقال
                 پایا/ساتنا شناسه{' '}
                 <code className="font-mono font-black text-black bg-retro-yellow px-1 border border-black rounded">
                   {activeInvoice.memo}
@@ -513,7 +563,7 @@ export function InvoicePrintSheet({
                 </div>
 
                 <div className="flex justify-between items-center pt-0.5">
-                  <span className="text-neutral-600">مبلغ مشمول مالیات:</span>
+                  <span className="text-neutral-600">خالص مشمول مالیات (Taxable Base):</span>
                   <span className="font-mono text-xs font-black text-black">
                     {formatToman(activeInvoice.taxableBase)} {activeInvoice.currency}
                   </span>
@@ -521,7 +571,7 @@ export function InvoicePrintSheet({
 
                 <div className="flex justify-between items-center pb-0.5">
                   <span className="text-neutral-600">
-                    مالیات بر ارزش افزوده ({toPersianDigits(activeInvoice.vatPercent)}٪):
+                    مالیات بر ارزش افزوده ({toPersianDigits(activeInvoice.vatPercent)}٪ VAT):
                   </span>
                   <span className="font-mono text-xs font-black text-emerald-800">
                     +{formatToman(activeInvoice.vatAmount)} {activeInvoice.currency}
@@ -531,14 +581,19 @@ export function InvoicePrintSheet({
 
               {/* کادر زردرنگ برجسته مبلغ نهایی کل (GRAND TOTAL DUE) */}
               <div className="bg-retro-yellow border-[3px] border-black rounded-xl p-3.5 shadow-[4px_4px_0_0_#000000]">
-                <span className="font-mono text-[11px] font-black text-black block mb-0.5">
-                  مبلغ نهایی قابل پرداخت (AMOUNT DUE)
-                </span>
-                <div className="font-mono text-2xl font-black text-black leading-tight flex items-baseline gap-1">
+                <div className="flex items-center justify-between mb-0.5">
+                  <span className="font-mono text-[11px] font-black text-black block">
+                    مبلغ نهایی قابل پرداخت (AMOUNT DUE)
+                  </span>
+                  <span className="font-mono text-[10px] font-black bg-black text-white px-1.5 py-0.5 rounded">
+                    تأییدیه تسویه
+                  </span>
+                </div>
+                <div className="font-mono text-2xl font-black text-black leading-tight flex items-baseline gap-1 mt-1">
                   <span>{formatToman(activeInvoice.finalAmount)}</span>
                   <span className="text-xs font-black">{activeInvoice.currency}</span>
                 </div>
-                <p className="font-mono text-[10px] text-neutral-800 mt-1 border-t border-black/30 pt-1 font-bold">
+                <p className="font-mono text-[10px] text-neutral-800 mt-1.5 border-t border-black/30 pt-1 font-bold">
                   معادل ریالی: {formatToman(activeInvoice.rialAmount)} ریال
                 </p>
               </div>
