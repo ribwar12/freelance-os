@@ -1,20 +1,91 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { DashboardPage } from './components/dashboard/DashboardPage';
 import { InvoicesPage } from './components/invoices/InvoicesPage';
 import { InvoiceSummaryStrip } from './components/invoices/InvoiceSummaryStrip';
 import { InvoiceFilters } from './components/invoices/InvoiceFilters';
 import { InvoicesTable, INITIAL_INVOICES_DATA } from './components/invoices/InvoicesTable';
-import { InvoiceShortcutsDock } from './components/invoices/InvoicePagination';
+import { InvoiceShortcutsDock, toPersianDigits } from './components/invoices/InvoicePagination';
 import { CreateInvoicePage } from './components/invoices/CreateInvoicePage';
 import { InvoiceMetadataCard, CLIENT_OPTIONS } from './components/invoices/InvoiceMetadataCard';
 import { InvoiceLineItemsCard, INITIAL_LINE_ITEMS, formatToman } from './components/invoices/InvoiceLineItemsCard';
 import { InvoicePaymentNotesCard, DEFAULT_PAYMENT_TERMS } from './components/invoices/InvoicePaymentNotesCard';
 import { InvoiceReceiptSidebar } from './components/invoices/InvoiceReceiptSidebar';
+import { InvoicePrintSheet } from './components/invoices/InvoicePrintSheet';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
+
+/**
+ * کامپوننت محفظه روت داینامیک برگه چاپی رسمی A4 بر مبنای شناسه فاکتور (/invoices/:id/print)
+ */
+function InvoicePrintRouteWrapper({ invoicesList, onBack, onSendDirect }) {
+  const { id } = useParams();
+  const found = invoicesList.find((i) => i.id === id);
+
+  let amountNum = 44550000;
+  if (found) {
+    if (typeof found.amount === 'number') {
+      amountNum = found.amount;
+    } else if (typeof found.amount === 'string') {
+      const cleaned = found.amount.replace(/[^0-9]/g, '');
+      if (cleaned) amountNum = parseInt(cleaned, 10);
+    }
+  }
+
+  const invoiceData = found
+    ? {
+        id: found.id,
+        client: found.client,
+        clientCompany: found.clientCompany || `${found.client} (سهامی خاص)`,
+        clientDept: found.clientDept || 'مرکز توسعه تجربه محصول و هسته دیزاین سیستم',
+        clientAttn: found.clientAttn || 'رضا رستمی (مدیر ارشد محصول)',
+        clientNationalId: found.clientNationalId || '۱۰۱۰۳۴۹۰۲۱۸',
+        clientEcoCode: found.clientEcoCode || '۴۱۱۳۸۹۷۴۵۱۹۲',
+        clientAddress: found.clientAddress || 'تهران، خیابان ولیعصر، بالاتر از ظفر، پلاک ۱۰۲',
+        issueDate: found.issueDate || '۱۴۰۵/۰۷/۲۳',
+        dueDate: found.dueDate || '۱۴۰۵/۰۸/۱۴',
+        gregorianDate: '2026-10-15',
+        terms: 'تسویه ۲۱ روزه (Net 21 Days)',
+        status: found.status === 'paid' ? 'paid' : 'unpaid',
+        currency: 'تومان',
+        items: [
+          {
+            id: 'item-1',
+            title: `توسعه، طراحی و تحویل اسپرینت‌های فنی ${found.project || 'پروژه'}`,
+            specs: 'طراحی، ممیزی معماری سیستم‌های دیزاین، بازبینی میکرواینترکشن‌ها و تحویل نیازمندی‌های قراردادی.',
+            qty: '۱ پروژه',
+            unitRate: amountNum,
+            total: amountNum,
+          },
+        ],
+        subtotal: amountNum,
+        discountPercent: 0,
+        discountAmount: 0,
+        taxableBase: amountNum,
+        vatPercent: 0,
+        vatAmount: 0,
+        finalAmount: amountNum,
+        rialAmount: amountNum * 10,
+        sheba: 'IR82 0560 0840 8000 0124 5592 01',
+        cardNumber: '6219 8610 4421 9083',
+        beneficiary: 'الکس مرادی',
+        bank: 'بانک سامان (شعبه مرکزی تهران)',
+        memo: found.id,
+        hash: 'SHA-256: 7f8a9e4b21c0b784',
+        syncStatus: 'STAMPED • IR-MOF-SYNC',
+      }
+    : null;
+
+  return (
+    <InvoicePrintSheet
+      invoice={invoiceData}
+      onBack={onBack}
+      onSendDirect={() => onSendDirect(id || 'INV-1405-10')}
+    />
+  );
+}
 
 export default function App() {
   const navigate = useNavigate();
@@ -530,7 +601,7 @@ export default function App() {
                   onMarkAsPaid={handleMarkAsPaid}
                   onDeleteInvoice={handleDeleteInvoice}
                   onBulkAction={handleBulkAction}
-                  onViewInvoice={(inv) => setActionNotice(`مشاهده جزئیات فاکتور ${inv.id}`)}
+                  onViewInvoice={(inv) => navigate(`/invoices/${inv.id}/print`)}
                   onEditInvoice={(inv) => setActionNotice(`ویرایش اطلاعات فاکتور ${inv.id}`)}
                   onRefresh={() => {
                     setInvoicesList(INITIAL_INVOICES_DATA);
@@ -791,7 +862,7 @@ export default function App() {
                     }
                     onSaveInvoice={handleSaveInvoice}
                     onPreviewPrint={() => {
-                      setActionNotice('پیش‌نمایش برگه چاپی رسمی A4 (آماده ورود به فاز ۵) 🖨️');
+                      navigate('/invoices/print');
                     }}
                     onDiscardDraft={() => {
                       setActionNotice('پیش‌نویس فاکتور لغو شد.');
@@ -801,6 +872,76 @@ export default function App() {
                       setActionNotice('قالب این فاکتور برای استفاده‌های آتی ذخیره شد! 💾');
                     }}
                   />
+                }
+              />
+            }
+          />
+
+          {/* روت پیش‌نمایش چاپی فاکتور پیش‌نویس جاری (/invoices/print) */}
+          <Route
+            path="/invoices/print"
+            element={
+              <InvoicePrintSheet
+                invoice={{
+                  id: 'INV-1405-10',
+                  client:
+                    (CLIENT_OPTIONS.find((c) => c.id === newInvoiceClient) || {}).name ||
+                    'دیجی‌کالا مارکت‌پلیس',
+                  clientCompany:
+                    (CLIENT_OPTIONS.find((c) => c.id === newInvoiceClient) || {}).company ||
+                    'شرکت نوآوران ارتباطات مهام (دیجی‌کالا)',
+                  clientDept: 'مرکز توسعه تجربه محصول و هسته دیزاین سیستم',
+                  clientAttn: 'رضا رستمی (مدیر ارشد محصول)',
+                  clientNationalId: '۱۰۱۰۳۴۹۰۲۱۸',
+                  clientEcoCode: '۴۱۱۳۸۹۷۴۵۱۹۲',
+                  clientAddress: 'تهران، خیابان گاندی جنوبی، کوچه پانزدهم، پلاک ۱۲',
+                  issueDate: newInvoiceIssueDate,
+                  dueDate: newInvoiceDueDate,
+                  gregorianDate: '2026-10-15',
+                  terms: 'تسویه ۲۱ روزه (Net 21 Days)',
+                  status: 'unpaid',
+                  currency: 'تومان',
+                  items: lineItems.map((li) => ({
+                    id: li.id,
+                    title: li.title,
+                    specs: li.description,
+                    qty: `${toPersianDigits(li.qty)} ${li.unit}`,
+                    unitRate: li.rate,
+                    total: li.qty * li.rate,
+                  })),
+                  subtotal: grossSubtotal,
+                  discountPercent: discountPercent,
+                  discountAmount: discountAmount,
+                  taxableBase: netAfterDiscount,
+                  vatPercent: isVatEnabled ? 10 : 0,
+                  vatAmount: vatTaxAmount,
+                  finalAmount: finalTotalAmount,
+                  rialAmount: finalTotalAmount * 10,
+                  sheba: 'IR82 0560 0840 8000 0124 5592 01',
+                  cardNumber: '6219 8610 4421 9083',
+                  beneficiary: 'الکس مرادی',
+                  bank: 'بانک سامان (شعبه مرکزی تهران)',
+                  memo: 'INV-1405-10',
+                  hash: 'SHA-256: 7f8a9e4b21c0b784',
+                  syncStatus: 'STAMPED • IR-MOF-SYNC',
+                }}
+                onBack={() => navigate('/invoices/new')}
+                onSendDirect={() =>
+                  setActionNotice('پیش‌نویس فاکتور رسمی به همراه پیش‌نمایش به امور مالی کارفرما ارسال شد! ✉️✓')
+                }
+              />
+            }
+          />
+
+          {/* روت نمایش و چاپ برگه رسمی A4 هر فاکتور بر مبنای شناسه (/invoices/:id/print) */}
+          <Route
+            path="/invoices/:id/print"
+            element={
+              <InvoicePrintRouteWrapper
+                invoicesList={invoicesList}
+                onBack={() => navigate('/invoices')}
+                onSendDirect={(id) =>
+                  setActionNotice(`فاکتور رسمی ${id} به همراه فایل PDF مستقیماً به امور مالی کارفرما ایمیل شد! ✉️✓`)
                 }
               />
             }
