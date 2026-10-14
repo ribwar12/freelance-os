@@ -10,6 +10,7 @@ import { InvoiceShortcutsDock } from './components/invoices/InvoicePagination';
 import { CreateInvoicePage } from './components/invoices/CreateInvoicePage';
 import { InvoiceMetadataCard } from './components/invoices/InvoiceMetadataCard';
 import { InvoiceLineItemsCard, INITIAL_LINE_ITEMS, formatToman } from './components/invoices/InvoiceLineItemsCard';
+import { InvoicePaymentNotesCard, DEFAULT_PAYMENT_TERMS } from './components/invoices/InvoicePaymentNotesCard';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -40,6 +41,9 @@ export default function App() {
   const [newInvoicePoRef, setNewInvoicePoRef] = useState('PO-DK-9041');
   const [newInvoiceIssueDate, setNewInvoiceIssueDate] = useState('۱۴۰۵/۰۷/۱۰');
   const [newInvoiceDueDate, setNewInvoiceDueDate] = useState('۱۴۰۵/۰۸/۰۱');
+
+  // یادداشت‌ها و شرایط تسویه فاکتور جدید (گام ۴-۴)
+  const [newInvoiceNotes, setNewInvoiceNotes] = useState(DEFAULT_PAYMENT_TERMS);
 
   // اقلام و خدمات فاکتور جدید (گام ۴-۳)
   const [lineItems, setLineItems] = useState(INITIAL_LINE_ITEMS);
@@ -655,57 +659,55 @@ export default function App() {
                       onImportTimesheet={handleImportTimesheet}
                     />
 
-                    {/* ۳. کارت پیش‌نمایش گام‌های بعدی و گزارش پیشرفت گام ۴-۳ */}
+                    {/* ۳. کارت ۳: شرایط تسویه، یادداشت‌های حقوقی و حساب بانکی (گام ۴-۴) */}
+                    <InvoicePaymentNotesCard
+                      notes={newInvoiceNotes}
+                      onNotesChange={setNewInvoiceNotes}
+                      onCopyFeedback={setActionNotice}
+                    />
+
+                    {/* ۴. کارت پیش‌نمایش گام‌های بعدی و گزارش پیشرفت گام ۴-۴ */}
                     <Card variant="default">
                       <CardHeader>
                         <div className="flex items-center justify-between flex-wrap gap-2">
                           <div className="flex items-center gap-2">
-                            <CardTitle>گام ۴-۳: جدول تعاملی خدمات و اقلام (InvoiceLineItemsCard.jsx)</CardTitle>
-                            <Badge variant="paid">گام سوم تکمیل شد ✓</Badge>
+                            <CardTitle>گام ۴-۴: یادداشت‌ها، شرایط تسویه و کارت بانکی شبا (InvoicePaymentNotesCard.jsx)</CardTitle>
+                            <Badge variant="paid">گام چهارم تکمیل شد ✓</Badge>
                           </div>
-                          <Badge variant="live">محاسبه زنده سطرها فعال است ⚡</Badge>
+                          <Badge variant="live">آماده گام ۴-۵ (صندوق زنده و ثبت نهایی)</Badge>
                         </div>
                         <CardDescription>
-                          جدول اقلام با قابلیت افزودن سطر نو، ویرایش آنی ساعت و نرخ، حذف سطر و محاسبه لحظه‌ای مبالغ در صندوق با موفقیت پیاده‌سازی شد.
+                          کارت ۳ با تکست‌اریای شروط حقوقی انتقال مالکیت اسپرینت، کارت بانکی استودیو، شماره شبای شاپرک و دکمه‌های کپی فوری در کلیپ‌بورد مستقر شد.
                         </CardDescription>
                       </CardHeader>
 
                       <CardContent className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
-                            <span className="w-6 h-6 rounded-md bg-retro-lavender border border-black flex items-center justify-center font-black text-xs">
-                              ۳
-                            </span>
-                            <h4 className="font-black text-xs text-black">کارت ۳ (گام بعدی ۴-۴)</h4>
-                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              یادداشت‌های حقوقی، شرایط تسویه و کارت استعلام شبای بانکی با دکمه کپی فوری.
-                            </p>
-                          </div>
-
-                          <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
+                        <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
+                          <div className="flex items-center justify-between">
                             <span className="w-6 h-6 rounded-md bg-retro-yellow border border-black flex items-center justify-center font-black text-xs">
-                              ۴
+                              ۵
                             </span>
-                            <h4 className="font-black text-xs text-black">سایدبار صندوق (گام ۴-۵)</h4>
-                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              سایدبار چسبان ماشین‌حساب، کنترلر تخفیف و ثبت نهایی فاکتور در استیت اصلی.
-                            </p>
+                            <Badge variant="pending">آخرین گام فاز ۴</Badge>
                           </div>
+                          <h4 className="font-black text-xs text-black">گام بعدی ۴-۵: تکمیل سایدبار صندوق حسابداری و ثبت فاکتور</h4>
+                          <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                            فعال‌سازی دکمه «ذخیره و صدور فاکتور رسمی» جهت درج فاکتور تنظیم‌شده در جدول اصلی و دکمه پیش‌نمایش چاپی برای ورود به فاز ۵.
+                          </p>
                         </div>
 
                         <div className="rounded-xl border-2 border-black bg-retro-mint/30 p-4 text-xs font-bold text-black space-y-1">
                           <p className="font-black">📌 وضعیت نقشه راه فاز ۴ (سازنده تعاملی فاکتور):</p>
                           <p>• ✅ گام ۴-۱: لایوت دو ستونه، ناوبری بازگشت و اتصال روت /invoices/new</p>
                           <p>• ✅ گام ۴-۲: کارت ۱ - مشخصات کارفرما و متادیتای فاکتور</p>
-                          <p>• ✅ گام ۴-۳: کارت ۲ - جدول آیتم‌ها و خدمات قابل فاکتور (تکمیل شد)</p>
-                          <p>• ⏳ گام ۴-۴ (گام بعدی): کارت ۳ - شرایط تسویه و کارت بانکی شبا</p>
-                          <p>• ⏳ گام ۴-۵: سایدبار ماشین‌حساب صندوق، تخفیف و مالیات زنده</p>
+                          <p>• ✅ گام ۴-۳: کارت ۲ - جدول آیتم‌ها و خدمات قابل فاکتور</p>
+                          <p>• ✅ گام ۴-۴: کارت ۳ - شرایط تسویه و کارت بانکی شبا (تکمیل شد)</p>
+                          <p>• ⏳ گام ۴-۵ (گام بعدی): سایدبار ماشین‌حساب صندوق، تخفیف و ثبت نهایی در ماتریس</p>
                         </div>
                       </CardContent>
 
                       <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
                         <span className="text-xs font-bold text-neutral-500">
-                          پیشرفت فاز ۴: گام ۳ از ۵ تکمیل شد (۶۰٪)
+                          پیشرفت فاز ۴: گام ۴ از ۵ تکمیل شد (۸۰٪)
                         </span>
                         <Button
                           variant="outline"
