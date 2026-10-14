@@ -13,6 +13,10 @@ import { InvoiceLineItemsCard, INITIAL_LINE_ITEMS, formatToman } from './compone
 import { InvoicePaymentNotesCard, DEFAULT_PAYMENT_TERMS } from './components/invoices/InvoicePaymentNotesCard';
 import { InvoiceReceiptSidebar } from './components/invoices/InvoiceReceiptSidebar';
 import { InvoicePrintSheet } from './components/invoices/InvoicePrintSheet';
+import { AddClientModal, AddProjectModal } from './components/modals/OperationalDialogSuite';
+import { ClientsPage } from './components/clients/ClientsPage';
+import { ProjectsPage } from './components/projects/ProjectsPage';
+import { ReportsPage } from './components/reports/ReportsPage';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -128,6 +132,92 @@ export default function App() {
   // تنظیمات تخفیف و مالیات صندوق (گام ۴-۵)
   const [discountPercent, setDiscountPercent] = useState(10);
   const [isVatEnabled, setIsVatEnabled] = useState(true);
+
+  // مدیریت کارفرمایان و پروژه‌ها (گام ۵-۵)
+  const [clientsList, setClientsList] = useState(CLIENT_OPTIONS);
+  const [projectsList, setProjectsList] = useState([
+    {
+      id: 'proj-1',
+      title: 'ممیزی دیزاین سیستم و معماری توکن‌ها',
+      clientId: 'digikala',
+      clientName: 'دیجی‌کالا مارکت‌پلیس',
+      billingModel: 'fixed',
+      budget: 45000000,
+      deadline: '۱۴۰۵/۰۸/۱۵',
+      status: 'active',
+      description: 'بررسی جامع فیگما، متغیرهای معنایی، تمپلیت‌های چندسکویی و هماهنگی با تیم فرانت‌اند.',
+    },
+    {
+      id: 'proj-2',
+      title: 'بازطراحی سوپراپ والت و پرداخت BNPL',
+      clientId: 'snappay',
+      clientName: 'اسنپ‌پی فین‌تک',
+      billingModel: 'hourly',
+      budget: 68000000,
+      deadline: '۱۴۰۵/۰۸/۲۸',
+      status: 'active',
+      description: 'طراحی فلو پرداخت اعتباری، میکرواینترکشن‌های تایید تراکنش و اتصال به درگاه بانکی.',
+    },
+    {
+      id: 'proj-3',
+      title: 'داشبورد هوش مصنوعی و آنالیز هوشمند قیمت',
+      clientId: 'torob',
+      clientName: 'موتور جستجوی ترب',
+      billingModel: 'fixed',
+      budget: 52000000,
+      deadline: '۱۴۰۵/۰۹/۱۰',
+      status: 'active',
+      description: 'طراحی ویجت‌های تحلیلی، نمودارهای پیش‌بینی قیمت و پایش رقبا.',
+    },
+    {
+      id: 'proj-4',
+      title: 'گایدلاین هویت بصری و سیستم طراحی کافه بازار',
+      clientId: 'cafebazaar',
+      clientName: 'کافه بازار',
+      billingModel: 'retainer',
+      budget: 40000000,
+      deadline: '۱۴۰۵/۰۹/۲۵',
+      status: 'planning',
+      description: 'تدوین دیزاین توکن‌ها، مستندسازی تایپوگرافی و استانداردسازی کامپوننت‌های دارک‌مود.',
+    },
+    {
+      id: 'proj-5',
+      title: 'اسپرینت فیلترهای پیشرفته املاک و خودرو',
+      clientId: 'divar',
+      clientName: 'دیوار آگهی‌ها',
+      billingModel: 'hourly',
+      budget: 35000000,
+      deadline: '۱۴۰۵/۰۸/۰۵',
+      status: 'active',
+      description: 'بهینه‌سازی معماری فیلترها و تست سرعت پاسخگویی در کلاینت‌های موبایل.',
+    },
+    {
+      id: 'proj-6',
+      title: 'پنل پروازهای خارجی و رزرواسیون هتل',
+      clientId: 'alibaba',
+      clientName: 'علی‌بابا تراول',
+      billingModel: 'fixed',
+      budget: 45000000,
+      deadline: '۱۴۰۵/۰۹/۱۵',
+      status: 'review',
+      description: 'طراحی تقویم قیمتی چندمرحله‌ای و سیستم انتخاب صندلی تعاملی.',
+    },
+  ]);
+
+  const [isClientModalOpen, setIsClientModalOpen] = useState(false);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+
+  const handleSaveClient = (newClient) => {
+    setClientsList((prev) => [newClient, ...prev]);
+    CLIENT_OPTIONS.unshift(newClient);
+    setNewInvoiceClient(newClient.id);
+    setActionNotice(`کارفرمای جدید «${newClient.name}» با موفقیت ثبت و الحاق گردید! 🎉`);
+  };
+
+  const handleSaveProject = (newProject) => {
+    setProjectsList((prev) => [newProject, ...prev]);
+    setActionNotice(`اسپرینت «${newProject.title}» با موفقیت تعریف و فعال گردید! 🚀`);
+  };
 
   // محاسبات بلادرنگ مبالغ فاکتور بر اساس اقلام جدول (گام ۴-۳ و ۴-۵)
   const grossSubtotal = lineItems.reduce(
@@ -515,8 +605,7 @@ export default function App() {
           setActionNotice('انتقال به صفحه صدور فاکتور جدید (فاز ۴)');
         }}
         onNewClient={() => {
-          navigate('/clients');
-          setActionNotice('انتقال به بخش ثبت مشتری جدید');
+          setIsClientModalOpen(true);
         }}
       />
 
@@ -752,8 +841,7 @@ export default function App() {
                       dueDate={newInvoiceDueDate}
                       onDueDateChange={setNewInvoiceDueDate}
                       onNewClientClick={() => {
-                        navigate('/clients');
-                        setActionNotice('انتقال به بخش ثبت کارفرمای جدید');
+                        setIsClientModalOpen(true);
                       }}
                     />
 
@@ -822,23 +910,21 @@ export default function App() {
                         <div className="rounded-xl border-2 border-black bg-retro-mint/30 p-4 text-xs font-bold text-black space-y-1.5">
                           <div className="flex items-center justify-between">
                             <span className="font-black text-emerald-900">🏆 وضعیت کلی نقشه راه پروژه Freelance OS:</span>
-                            <span className="font-mono font-black text-black bg-white px-2 py-0.5 rounded border border-black">
-                              ۲۰ گام از ۲۵ گام (۸۰٪ کل پروژه)
+                            <span className="font-mono font-black text-black bg-retro-mint px-2 py-0.5 rounded border border-black shadow-[2px_2px_0_0_#000000]">
+                              ۲۵ گام از ۲۵ گام (۱۰۰٪ تکمیل - آماده پرزنتیشن)
                             </span>
                           </div>
                           <p>• ✅ فاز ۱: دیزاین سیستم کامل نئوبروتال (۵ از ۵ گام - ۱۰۰٪)</p>
                           <p>• ✅ فاز ۲: پیشخوان و داشبورد اجرایی و KPIها (۵ از ۵ گام - ۱۰۰٪)</p>
                           <p>• ✅ فاز ۳: ماژول جامع فاکتورها، فیلترها و صفحه‌بندی (۵ از ۵ گام - ۱۰۰٪)</p>
                           <p>• ✅ فاز ۴: سازنده تعاملی فاکتور، اقلام، شبا و صندوق زنده (۵ از ۵ گام - ۱۰۰٪)</p>
-                          <p className="font-black text-black pt-1">
-                            • 🎯 مقصد نهایی (فاز ۵): برگه رسمی و چاپی A4، خروجی PDF و تست نهایی نمایشگاه کار
-                          </p>
+                          <p>• ✅ فاز ۵: برگه رسمی چاپی A4، خروجی PDF، مودال‌های عملیاتی و پولیش نهایی (۵ از ۵ گام - ۱۰۰٪)</p>
                         </div>
                       </CardContent>
 
                       <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
-                        <span className="text-xs font-bold text-neutral-500">
-                          پایان موفقیت‌آمیز فاز ۴ • ۲۰ از ۲۵ گام انجام شد (۸۰٪)
+                        <span className="text-xs font-black text-emerald-800">
+                          🎉 تمام ۲۵ گام پروژه با موفقیت به پایان رسید • آماده نمایشگاه کار ۲۲ مهر
                         </span>
                         <div className="flex gap-2">
                           <Button
@@ -952,81 +1038,49 @@ export default function App() {
             }
           />
 
-          {/* روت مشتریان (/clients) */}
+          {/* روت مشتریان (/clients) - گام ۵-۵ */}
           <Route
             path="/clients"
             element={
-              <Card variant="default">
-                <CardHeader>
-                  <CardTitle>بخش مشتریان (/clients)</CardTitle>
-                  <CardDescription>
-                    ماژول مدیریت کارفرمایان و باشگاه مشتریان استودیو (در فاز ۵ تکمیل خواهد شد).
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs font-bold text-neutral-600">
-                    این مسیر با React Router فعال است. می‌توانید به پیشخوان یا فاکتورها برگردید.
-                  </p>
-                </CardContent>
-                <CardFooter className="gap-2">
-                  <Button size="sm" variant="default" onClick={() => navigate('/invoices')}>
-                    مشاهده فاکتورها (/invoices)
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => navigate('/')}>
-                    پیشخوان اصلی (/)
-                  </Button>
-                </CardFooter>
-              </Card>
+              <ClientsPage
+                clientsList={clientsList}
+                onOpenNewClientModal={() => setIsClientModalOpen(true)}
+                onSelectClientForInvoice={(clientId) => {
+                  setNewInvoiceClient(clientId);
+                  navigate('/invoices/new');
+                  setActionNotice('کارفرما برای فاکتور جدید تنظیم شد.');
+                }}
+              />
             }
           />
 
-          {/* روت پروژه‌ها (/projects) */}
+          {/* روت پروژه‌ها (/projects) - گام ۵-۵ */}
           <Route
             path="/projects"
             element={
-              <Card variant="default">
-                <CardHeader>
-                  <CardTitle>بخش پروژه‌ها (/projects)</CardTitle>
-                  <CardDescription>
-                    پایپ‌لاین اسپرینت‌ها و ددلاین‌های تحویل استودیو.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs font-bold text-neutral-600">
-                    ویجت خلاصه پروژه‌های فعال در پیشخوان اصلی قرار دارد.
-                  </p>
-                </CardContent>
-                <CardFooter className="gap-2">
-                  <Button size="sm" variant="default" onClick={() => navigate('/')}>
-                    مشاهده پیشخوان (/)
-                  </Button>
-                </CardFooter>
-              </Card>
+              <ProjectsPage
+                projectsList={projectsList}
+                onOpenNewProjectModal={() => setIsProjectModalOpen(true)}
+                onNewInvoiceForProject={(proj) => {
+                  setNewInvoiceProject(proj.title);
+                  if (proj.clientId) {
+                    setNewInvoiceClient(proj.clientId);
+                  }
+                  navigate('/invoices/new');
+                  setActionNotice(`فاکتور برای پروژه «${proj.title}» تنظیم شد.`);
+                }}
+              />
             }
           />
 
-          {/* روت گزارشات (/reports) */}
+          {/* روت گزارشات (/reports) - گام ۵-۵ */}
           <Route
             path="/reports"
             element={
-              <Card variant="default">
-                <CardHeader>
-                  <CardTitle>بخش گزارشات (/reports)</CardTitle>
-                  <CardDescription>
-                    آنالیز مالی، رشد فصلی و گزارشات ارزش افزوده.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs font-bold text-neutral-600">
-                    کارت‌های شاخص عملکرد زنده در پیشخوان فعال هستند.
-                  </p>
-                </CardContent>
-                <CardFooter className="gap-2">
-                  <Button size="sm" variant="default" onClick={() => navigate('/')}>
-                    مشاهده پیشخوان (/)
-                  </Button>
-                </CardFooter>
-              </Card>
+              <ReportsPage
+                onExportCsv={() => setActionNotice('خروجی کامل اکسل / CSV دفتر کل مالی دانلود شد! 📥')}
+                onPrintTaxSummary={() => window.print()}
+              />
             }
           />
 
@@ -1034,6 +1088,20 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+
+      {/* سوئیت مودال‌های عملیاتی نئوبروتال (گام ۵-۵) */}
+      <AddClientModal
+        isOpen={isClientModalOpen}
+        onClose={() => setIsClientModalOpen(false)}
+        onSaveClient={handleSaveClient}
+      />
+
+      <AddProjectModal
+        isOpen={isProjectModalOpen}
+        onClose={() => setIsProjectModalOpen(false)}
+        onSaveProject={handleSaveProject}
+        clientOptions={clientsList}
+      />
     </div>
   );
 }
