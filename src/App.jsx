@@ -8,9 +8,10 @@ import { InvoiceFilters } from './components/invoices/InvoiceFilters';
 import { InvoicesTable, INITIAL_INVOICES_DATA } from './components/invoices/InvoicesTable';
 import { InvoiceShortcutsDock } from './components/invoices/InvoicePagination';
 import { CreateInvoicePage } from './components/invoices/CreateInvoicePage';
-import { InvoiceMetadataCard } from './components/invoices/InvoiceMetadataCard';
+import { InvoiceMetadataCard, CLIENT_OPTIONS } from './components/invoices/InvoiceMetadataCard';
 import { InvoiceLineItemsCard, INITIAL_LINE_ITEMS, formatToman } from './components/invoices/InvoiceLineItemsCard';
 import { InvoicePaymentNotesCard, DEFAULT_PAYMENT_TERMS } from './components/invoices/InvoicePaymentNotesCard';
+import { InvoiceReceiptSidebar } from './components/invoices/InvoiceReceiptSidebar';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -48,16 +49,46 @@ export default function App() {
   // اقلام و خدمات فاکتور جدید (گام ۴-۳)
   const [lineItems, setLineItems] = useState(INITIAL_LINE_ITEMS);
 
-  // محاسبات بلادرنگ مبالغ فاکتور بر اساس اقلام جدول (گام ۴-۳)
+  // تنظیمات تخفیف و مالیات صندوق (گام ۴-۵)
+  const [discountPercent, setDiscountPercent] = useState(10);
+  const [isVatEnabled, setIsVatEnabled] = useState(true);
+
+  // محاسبات بلادرنگ مبالغ فاکتور بر اساس اقلام جدول (گام ۴-۳ و ۴-۵)
   const grossSubtotal = lineItems.reduce(
     (sum, item) => sum + (Number(item.qty) || 0) * (Number(item.rate) || 0),
     0
   );
-  const discountPercent = 10;
-  const discountAmount = Math.round((grossSubtotal * discountPercent) / 100);
+  const discountAmount = Math.round((grossSubtotal * (discountPercent || 0)) / 100);
   const netAfterDiscount = grossSubtotal - discountAmount;
-  const vatTaxAmount = Math.round((netAfterDiscount * 10) / 100);
+  const vatTaxAmount = isVatEnabled ? Math.round((netAfterDiscount * 10) / 100) : 0;
   const finalTotalAmount = netAfterDiscount + vatTaxAmount;
+
+  // ثبت و صدور فاکتور جدید در ماتریس اصلی (گام ۴-۵)
+  const handleSaveInvoice = () => {
+    const foundClient = CLIENT_OPTIONS.find((c) => c.id === newInvoiceClient);
+    const clientName = foundClient ? foundClient.name : 'دیجی‌کالا مارکت‌پلیس';
+    const clientId = foundClient ? `#${newInvoiceClient.slice(0, 2).toUpperCase()}-904` : '#DK-9041';
+
+    const newInvoice = {
+      id: 'INV-1405-10',
+      client: clientName,
+      clientId: clientId,
+      avatar: clientName.charAt(0),
+      avatarBg: 'bg-retro-yellow',
+      project: newInvoiceProject,
+      milestone: 'اسپرینت تحویل رسمی',
+      issueDate: newInvoiceIssueDate,
+      dueDate: newInvoiceDueDate,
+      amount: formatToman(finalTotalAmount),
+      status: 'pending',
+      statusLabel: 'در انتظار واریز',
+      isOverdue: false,
+    };
+
+    setInvoicesList((prev) => [newInvoice, ...prev]);
+    setActionNotice(`فاکتور ${newInvoice.id} به مبلغ ${newInvoice.amount} تومان صادر و در دفتر کل ثبت شد! 🎉`);
+    navigate('/invoices');
+  };
 
   const handleAddLineItem = () => {
     const newItem = {
@@ -666,116 +697,110 @@ export default function App() {
                       onCopyFeedback={setActionNotice}
                     />
 
-                    {/* ۴. کارت پیش‌نمایش گام‌های بعدی و گزارش پیشرفت گام ۴-۴ */}
+                    {/* ۴. کارت گزارش موفقیت و تکمیل ۱۰۰٪ فاز ۴ */}
                     <Card variant="default">
                       <CardHeader>
                         <div className="flex items-center justify-between flex-wrap gap-2">
                           <div className="flex items-center gap-2">
-                            <CardTitle>گام ۴-۴: یادداشت‌ها، شرایط تسویه و کارت بانکی شبا (InvoicePaymentNotesCard.jsx)</CardTitle>
-                            <Badge variant="paid">گام چهارم تکمیل شد ✓</Badge>
+                            <CardTitle>گام ۴-۵: سایدبار ماشین‌حساب صندوق و ثبت نهایی فاکتور (InvoiceReceiptSidebar.jsx)</CardTitle>
+                            <Badge variant="paid">فاز ۴: ۱۰۰٪ تکمیل شد 🎉</Badge>
                           </div>
-                          <Badge variant="live">آماده گام ۴-۵ (صندوق زنده و ثبت نهایی)</Badge>
+                          <Badge variant="live">آماده فاز ۵ (برگه چاپی A4)</Badge>
                         </div>
                         <CardDescription>
-                          کارت ۳ با تکست‌اریای شروط حقوقی انتقال مالکیت اسپرینت، کارت بانکی استودیو، شماره شبای شاپرک و دکمه‌های کپی فوری در کلیپ‌بورد مستقر شد.
+                          هر ۵ گام سازنده تعاملی فاکتور پیاده‌سازی شدند: لایوت دو ستونه، متادیتا، جدول داینامیک اقلام، شرایط تسویه بانکی و سایدبار چسبان صندوق حسابداری با ثبت قطعی در جدول.
                         </CardDescription>
                       </CardHeader>
 
                       <CardContent className="space-y-4">
-                        <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
-                          <div className="flex items-center justify-between">
-                            <span className="w-6 h-6 rounded-md bg-retro-yellow border border-black flex items-center justify-center font-black text-xs">
-                              ۵
-                            </span>
-                            <Badge variant="pending">آخرین گام فاز ۴</Badge>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
+                            <h4 className="font-black text-xs text-black">۱. محاسبات بلادرنگ</h4>
+                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                              محاسبه آنی جمع سطرها، کسر تخفیف، اعمال ۱۰٪ مالیات و معادل ریالی.
+                            </p>
                           </div>
-                          <h4 className="font-black text-xs text-black">گام بعدی ۴-۵: تکمیل سایدبار صندوق حسابداری و ثبت فاکتور</h4>
-                          <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                            فعال‌سازی دکمه «ذخیره و صدور فاکتور رسمی» جهت درج فاکتور تنظیم‌شده در جدول اصلی و دکمه پیش‌نمایش چاپی برای ورود به فاز ۵.
-                          </p>
+
+                          <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
+                            <h4 className="font-black text-xs text-black">۲. کنترلر تخفیف و VAT</h4>
+                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                              سوئیچ فعال/غیرفعال مالیات ارزش افزوده و دراپ‌داون درصدهای تخفیف.
+                            </p>
+                          </div>
+
+                          <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
+                            <h4 className="font-black text-xs text-black">۳. ثبت رسمی در ماتریس</h4>
+                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                              با زدن «ذخیره و صدور»، فاکتور بلافاصله به اول لیست فاکتورها تزریق می‌شود.
+                            </p>
+                          </div>
+
+                          <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
+                            <h4 className="font-black text-xs text-black">۴. شاخص خوش‌حسابی</h4>
+                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                              نمایش وضعیت اعتباری و پرداخت به‌موقع کارفرمای انتخاب‌شده.
+                            </p>
+                          </div>
                         </div>
 
-                        <div className="rounded-xl border-2 border-black bg-retro-mint/30 p-4 text-xs font-bold text-black space-y-1">
-                          <p className="font-black">📌 وضعیت نقشه راه فاز ۴ (سازنده تعاملی فاکتور):</p>
-                          <p>• ✅ گام ۴-۱: لایوت دو ستونه، ناوبری بازگشت و اتصال روت /invoices/new</p>
-                          <p>• ✅ گام ۴-۲: کارت ۱ - مشخصات کارفرما و متادیتای فاکتور</p>
-                          <p>• ✅ گام ۴-۳: کارت ۲ - جدول آیتم‌ها و خدمات قابل فاکتور</p>
-                          <p>• ✅ گام ۴-۴: کارت ۳ - شرایط تسویه و کارت بانکی شبا (تکمیل شد)</p>
-                          <p>• ⏳ گام ۴-۵ (گام بعدی): سایدبار ماشین‌حساب صندوق، تخفیف و ثبت نهایی در ماتریس</p>
+                        <div className="rounded-xl border-2 border-black bg-retro-mint/30 p-4 text-xs font-bold text-black space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="font-black text-emerald-900">🏆 وضعیت کلی نقشه راه پروژه Freelance OS:</span>
+                            <span className="font-mono font-black text-black bg-white px-2 py-0.5 rounded border border-black">
+                              ۲۰ گام از ۲۵ گام (۸۰٪ کل پروژه)
+                            </span>
+                          </div>
+                          <p>• ✅ فاز ۱: دیزاین سیستم کامل نئوبروتال (۵ از ۵ گام - ۱۰۰٪)</p>
+                          <p>• ✅ فاز ۲: پیشخوان و داشبورد اجرایی و KPIها (۵ از ۵ گام - ۱۰۰٪)</p>
+                          <p>• ✅ فاز ۳: ماژول جامع فاکتورها، فیلترها و صفحه‌بندی (۵ از ۵ گام - ۱۰۰٪)</p>
+                          <p>• ✅ فاز ۴: سازنده تعاملی فاکتور، اقلام، شبا و صندوق زنده (۵ از ۵ گام - ۱۰۰٪)</p>
+                          <p className="font-black text-black pt-1">
+                            • 🎯 مقصد نهایی (فاز ۵): برگه رسمی و چاپی A4، خروجی PDF و تست نهایی نمایشگاه کار
+                          </p>
                         </div>
                       </CardContent>
 
                       <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
                         <span className="text-xs font-bold text-neutral-500">
-                          پیشرفت فاز ۴: گام ۴ از ۵ تکمیل شد (۸۰٪)
+                          پایان موفقیت‌آمیز فاز ۴ • ۲۰ از ۲۵ گام انجام شد (۸۰٪)
                         </span>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => navigate('/invoices')}
-                        >
-                          بازگشت به فهرست فاکتورها ↶
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => navigate('/invoices')}
+                          >
+                            مشاهده جدول فاکتورها ↶
+                          </Button>
+                        </div>
                       </CardFooter>
                     </Card>
                   </div>
                 }
                 rightDeck={
-                  <div className="space-y-4">
-                    {/* پیش‌نمایش سایدبار صندوق حسابداری زنده */}
-                    <div className="bg-white border-2 border-black rounded-2xl shadow-retro overflow-hidden flex flex-col">
-                      <div className="bg-black text-white px-4 py-3 border-b-2 border-black flex items-center justify-between">
-                        <div>
-                          <span className="font-mono text-[10px] tracking-widest text-retro-yellow block font-bold">
-                            صندوق حسابداری زنده
-                          </span>
-                          <h3 className="font-mono text-sm font-black text-white mt-0.5">
-                            خلاصه صورت‌حساب
-                          </h3>
-                        </div>
-                        <span className="text-xl">🧾</span>
-                      </div>
-
-                      <div className="p-4 space-y-3 text-xs font-bold text-neutral-700">
-                        <div className="flex justify-between items-center pb-2 border-b-2 border-dashed border-neutral-300">
-                          <span>جمع ناخالص ({lineItems.length} قلم):</span>
-                          <span className="font-mono font-black text-black">{formatToman(grossSubtotal)} تومان</span>
-                        </div>
-                        <div className="flex justify-between items-center pb-2 border-b-2 border-dashed border-neutral-300">
-                          <span className="text-retro-coral font-black">تخفیف همکاری ({discountPercent}٪):</span>
-                          <span className="font-mono font-black text-retro-coral">-{formatToman(discountAmount)} تومان</span>
-                        </div>
-                        <div className="flex justify-between items-center pb-2 border-b-2 border-dashed border-neutral-300">
-                          <span className="text-emerald-700">مالیات بر ارزش افزوده (۱۰٪):</span>
-                          <span className="font-mono font-black text-emerald-800">+{formatToman(vatTaxAmount)} تومان</span>
-                        </div>
-
-                        <div className="bg-retro-yellow p-3 rounded-xl border-2 border-black shadow-[2px_2px_0_0_#000000] space-y-0.5">
-                          <span className="text-[10px] font-black text-black block">مبلغ نهایی قابل پرداخت:</span>
-                          <span className="font-mono text-xl font-black text-black block">{formatToman(finalTotalAmount)} تومان</span>
-                        </div>
-
-                        <Button
-                          variant="default"
-                          size="default"
-                          className="w-full shadow-retro justify-center font-black mt-2 bg-black text-white hover:bg-neutral-800"
-                          onClick={() => setActionNotice('در گام ۴-۵، این دکمه فاکتور را در ماتریس فاکتورها ثبت می‌کند.')}
-                        >
-                          💾 ذخیره و صدور فاکتور رسمی
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="bg-white border-2 border-black rounded-xl p-3 shadow-retro-sm flex items-center justify-between">
-                      <div>
-                        <span className="font-mono text-[10px] text-neutral-500 font-bold block">شاخص کارفرما</span>
-                        <span className="font-black text-xs text-black">دیجی‌کالا: ۱۰۰٪ خوش‌حساب</span>
-                      </div>
-                      <span className="w-7 h-7 rounded-full bg-retro-mint border border-black flex items-center justify-center text-xs font-black">
-                        ✓
-                      </span>
-                    </div>
-                  </div>
+                  <InvoiceReceiptSidebar
+                    itemsCount={lineItems.length}
+                    grossSubtotal={grossSubtotal}
+                    discountPercent={discountPercent}
+                    onDiscountChange={setDiscountPercent}
+                    isVatEnabled={isVatEnabled}
+                    onVatToggle={() => setIsVatEnabled((prev) => !prev)}
+                    vatPercent={10}
+                    clientName={
+                      (CLIENT_OPTIONS.find((c) => c.id === newInvoiceClient) || {}).name || 'دیجی‌کالا مارکت‌پلیس'
+                    }
+                    onSaveInvoice={handleSaveInvoice}
+                    onPreviewPrint={() => {
+                      setActionNotice('پیش‌نمایش برگه چاپی رسمی A4 (آماده ورود به فاز ۵) 🖨️');
+                    }}
+                    onDiscardDraft={() => {
+                      setActionNotice('پیش‌نویس فاکتور لغو شد.');
+                      navigate('/invoices');
+                    }}
+                    onSaveTemplate={() => {
+                      setActionNotice('قالب این فاکتور برای استفاده‌های آتی ذخیره شد! 💾');
+                    }}
+                  />
                 }
               />
             }
