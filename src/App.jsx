@@ -7,6 +7,7 @@ import { InvoiceSummaryStrip } from './components/invoices/InvoiceSummaryStrip';
 import { InvoiceFilters } from './components/invoices/InvoiceFilters';
 import { InvoicesTable, INITIAL_INVOICES_DATA } from './components/invoices/InvoicesTable';
 import { InvoiceShortcutsDock } from './components/invoices/InvoicePagination';
+import { CreateInvoicePage } from './components/invoices/CreateInvoicePage';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -41,7 +42,8 @@ export default function App() {
 
       if (e.key === 'n' || e.key === 'N') {
         e.preventDefault();
-        setActionNotice('⚡ کلید میانبر [N]: آغاز فرآیند صدور فاکتور جدید');
+        navigate('/invoices/new');
+        setActionNotice('⚡ کلید میانبر [N]: هدایت به صفحه صدور فاکتور جدید (فاز ۴)');
       } else if (e.key === 'f' || e.key === 'F') {
         e.preventDefault();
         const searchInput = document.getElementById('invoiceSearchInput');
@@ -345,8 +347,8 @@ export default function App() {
       {/* کامپوننت نوبار سراسری مجهز به React Router NavLink */}
       <Navbar
         onNewInvoice={() => {
-          navigate('/invoices');
-          setActionNotice('انتقال به بخش صدور فاکتور جدید');
+          navigate('/invoices/new');
+          setActionNotice('انتقال به صفحه صدور فاکتور جدید (فاز ۴)');
         }}
         onNewClient={() => {
           navigate('/clients');
@@ -388,7 +390,10 @@ export default function App() {
             path="/invoices"
             element={
               <InvoicesPage
-                onNewInvoice={() => setActionNotice('کلیک روی «صدور فاکتور جدید» از هدر فاکتورها (فاز ۴)')}
+                onNewInvoice={() => {
+                  navigate('/invoices/new');
+                  setActionNotice('انتقال به صفحه صدور فاکتور جدید (فاز ۴)');
+                }}
                 onExportCSV={() => setActionNotice('درخواست استخراج خروجی CSV / گزارش مالی')}
               >
                 {/* ۱. نوار کارت‌های ۳گانه خلاصه مالی فاکتورها (گام ۳-۲) */}
@@ -528,7 +533,15 @@ export default function App() {
                     <span className="text-xs font-bold text-neutral-500">
                       پایان موفقیت‌آمیز فاز ۳ • آماده ارائه در نمایشگاه کار مهر ۲۲
                     </span>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => navigate('/invoices/new')}
+                        className="bg-black text-white hover:bg-neutral-800 shadow-retro"
+                      >
+                        ورود به فاز ۴: صدور فاکتور جدید 🚀
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"
@@ -540,6 +553,149 @@ export default function App() {
                   </CardFooter>
                 </Card>
               </InvoicesPage>
+            }
+          />
+
+          {/* روت ایجاد و صدور فاکتور جدید تعاملی (/invoices/new) - فاز ۴ */}
+          <Route
+            path="/invoices/new"
+            element={
+              <CreateInvoicePage
+                invoiceNumber="INV-1405-10"
+                currency="تومان"
+                leftDeck={
+                  <div className="space-y-6">
+                    {/* کارت معرفی و وضعیت گام ۴-۱ */}
+                    <Card variant="default">
+                      <CardHeader>
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <div className="flex items-center gap-2">
+                            <CardTitle>گام ۴-۱: استقرار محیط کاری دو ستونه صدور فاکتور (CreateInvoicePage.jsx)</CardTitle>
+                            <Badge variant="live">فاز ۴: گام اول</Badge>
+                          </div>
+                          <Badge variant="paid">طرح گوگل استیچ فعال شد ✓</Badge>
+                        </div>
+                        <CardDescription>
+                          زیرساخت لایوت ۱۲ ستونه بر اساس طرح Stitch: ستون فرم‌های اجرایی (۸ ستون) و ستون سایدبار چسبان صندوق حسابداری (۴ ستون).
+                        </CardDescription>
+                      </CardHeader>
+
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
+                            <span className="w-6 h-6 rounded-md bg-retro-yellow border border-black flex items-center justify-center font-black text-xs">
+                              ۱
+                            </span>
+                            <h4 className="font-black text-xs text-black">کارت ۱ (گام بعدی ۴-۲)</h4>
+                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                              مشخصات کارفرما، پروژه، سریال فاکتور، کد پیگیری و تاریخ‌های شمسی.
+                            </p>
+                          </div>
+
+                          <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
+                            <span className="w-6 h-6 rounded-md bg-retro-mint border border-black flex items-center justify-center font-black text-xs">
+                              ۲
+                            </span>
+                            <h4 className="font-black text-xs text-black">کارت ۲ (گام ۴-۳)</h4>
+                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                              جدول خدمات و اقلام، ساعت کارکرد، نرخ ساعتی و دکمه افزودن سطر.
+                            </p>
+                          </div>
+
+                          <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
+                            <span className="w-6 h-6 rounded-md bg-retro-lavender border border-black flex items-center justify-center font-black text-xs">
+                              ۳
+                            </span>
+                            <h4 className="font-black text-xs text-black">کارت ۳ (گام ۴-۴)</h4>
+                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
+                              یادداشت‌های حقوقی، شرایط تسویه و کارت استعلام شبای بانکی.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-1">
+                          <p className="font-black">📌 برنامه اجرایی ۵ مرحله‌ای فاز ۴ (سازنده فاکتور):</p>
+                          <p>• ✅ گام ۴-۱: لایوت دو ستونه، ناوبری بازگشت و اتصال روت /invoices/new</p>
+                          <p>• ⏳ گام ۴-۲: کارت ۱ - مشخصات کارفرما و متادیتای فاکتور</p>
+                          <p>• ⏳ گام ۴-۳: کارت ۲ - جدول آیتم‌ها و خدمات قابل فاکتور</p>
+                          <p>• ⏳ گام ۴-۴: کارت ۳ - شرایط تسویه و کارت بانکی شبا</p>
+                          <p>• ⏳ گام ۴-۵: سایدبار ماشین‌حساب صندوق، تخفیف و مالیات زنده</p>
+                        </div>
+                      </CardContent>
+
+                      <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
+                        <span className="text-xs font-bold text-neutral-500">
+                          پیشرفت فاز ۴: گام ۱ از ۵ تکمیل شد (۲۰٪)
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate('/invoices')}
+                        >
+                          بازگشت به فهرست فاکتورها ↶
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  </div>
+                }
+                rightDeck={
+                  <div className="space-y-4">
+                    {/* پیش‌نمایش سایدبار صندوق حسابداری زنده */}
+                    <div className="bg-white border-2 border-black rounded-2xl shadow-retro overflow-hidden flex flex-col">
+                      <div className="bg-black text-white px-4 py-3 border-b-2 border-black flex items-center justify-between">
+                        <div>
+                          <span className="font-mono text-[10px] tracking-widest text-retro-yellow block font-bold">
+                            صندوق حسابداری زنده
+                          </span>
+                          <h3 className="font-mono text-sm font-black text-white mt-0.5">
+                            خلاصه صورت‌حساب
+                          </h3>
+                        </div>
+                        <span className="text-xl">🧾</span>
+                      </div>
+
+                      <div className="p-4 space-y-3 text-xs font-bold text-neutral-700">
+                        <div className="flex justify-between items-center pb-2 border-b-2 border-dashed border-neutral-300">
+                          <span>جمع ناخالص خدمات:</span>
+                          <span className="font-mono font-black text-black">۴۵,۰۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2 border-b-2 border-dashed border-neutral-300">
+                          <span className="text-retro-coral font-black">تخفیف همکاری (۱۰٪):</span>
+                          <span className="font-mono font-black text-retro-coral">-۴,۵۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2 border-b-2 border-dashed border-neutral-300">
+                          <span className="text-emerald-700">مالیات بر ارزش افزوده (۱۰٪):</span>
+                          <span className="font-mono font-black text-emerald-800">+۴,۰۵۰,۰۰۰ تومان</span>
+                        </div>
+
+                        <div className="bg-retro-yellow p-3 rounded-xl border-2 border-black shadow-[2px_2px_0_0_#000000] space-y-0.5">
+                          <span className="text-[10px] font-black text-black block">مبلغ نهایی قابل پرداخت:</span>
+                          <span className="font-mono text-xl font-black text-black block">۴۴,۵۵۰,۰۰۰ تومان</span>
+                        </div>
+
+                        <Button
+                          variant="default"
+                          size="default"
+                          className="w-full shadow-retro justify-center font-black mt-2 bg-black text-white hover:bg-neutral-800"
+                          onClick={() => setActionNotice('در گام‌های بعدی، این دکمه فاکتور را در استیت ثبت می‌کند.')}
+                        >
+                          💾 ذخیره و صدور فاکتور رسمی
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border-2 border-black rounded-xl p-3 shadow-retro-sm flex items-center justify-between">
+                      <div>
+                        <span className="font-mono text-[10px] text-neutral-500 font-bold block">شاخص کارفرما</span>
+                        <span className="font-black text-xs text-black">دیجی‌کالا: ۱۰۰٪ خوش‌حساب</span>
+                      </div>
+                      <span className="w-7 h-7 rounded-full bg-retro-mint border border-black flex items-center justify-center text-xs font-black">
+                        ✓
+                      </span>
+                    </div>
+                  </div>
+                }
+              />
             }
           />
 
