@@ -9,6 +9,7 @@ import { InvoicesTable, INITIAL_INVOICES_DATA } from './components/invoices/Invo
 import { InvoiceShortcutsDock } from './components/invoices/InvoicePagination';
 import { CreateInvoicePage } from './components/invoices/CreateInvoicePage';
 import { InvoiceMetadataCard } from './components/invoices/InvoiceMetadataCard';
+import { InvoiceLineItemsCard, INITIAL_LINE_ITEMS, formatToman } from './components/invoices/InvoiceLineItemsCard';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -39,6 +40,50 @@ export default function App() {
   const [newInvoicePoRef, setNewInvoicePoRef] = useState('PO-DK-9041');
   const [newInvoiceIssueDate, setNewInvoiceIssueDate] = useState('۱۴۰۵/۰۷/۱۰');
   const [newInvoiceDueDate, setNewInvoiceDueDate] = useState('۱۴۰۵/۰۸/۰۱');
+
+  // اقلام و خدمات فاکتور جدید (گام ۴-۳)
+  const [lineItems, setLineItems] = useState(INITIAL_LINE_ITEMS);
+
+  // محاسبات بلادرنگ مبالغ فاکتور بر اساس اقلام جدول (گام ۴-۳)
+  const grossSubtotal = lineItems.reduce(
+    (sum, item) => sum + (Number(item.qty) || 0) * (Number(item.rate) || 0),
+    0
+  );
+  const discountPercent = 10;
+  const discountAmount = Math.round((grossSubtotal * discountPercent) / 100);
+  const netAfterDiscount = grossSubtotal - discountAmount;
+  const vatTaxAmount = Math.round((netAfterDiscount * 10) / 100);
+  const finalTotalAmount = netAfterDiscount + vatTaxAmount;
+
+  const handleAddLineItem = () => {
+    const newItem = {
+      id: `item-${Date.now()}`,
+      title: 'خدمت طراحی / توسعه جدید',
+      description: 'اسپرینت تحویلی توافق‌شده با کارفرما',
+      qty: 10,
+      unit: 'ساعت',
+      rate: 500000,
+    };
+    setLineItems((prev) => [...prev, newItem]);
+    setActionNotice('یک سطر خدمات جدید به فاکتور اضافه شد. ➕');
+  };
+
+  const handleUpdateLineItem = (id, field, value) => {
+    setLineItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    );
+  };
+
+  const handleDeleteLineItem = (id) => {
+    if (lineItems.length <= 1) return;
+    setLineItems((prev) => prev.filter((item) => item.id !== id));
+    setActionNotice('سطر مورد نظر از جدول خدمات حذف شد. 🗑️');
+  };
+
+  const handleImportTimesheet = () => {
+    setLineItems(INITIAL_LINE_ITEMS);
+    setActionNotice('کارکرد پروژه از سیستم تایم‌شیت با موفقیت همگام‌سازی شد! ⏱️');
+  };
 
   // شنودگر میانبرهای صفحه‌کلید صنعتی (N, F, /, E)
   useEffect(() => {
@@ -601,57 +646,66 @@ export default function App() {
                       }}
                     />
 
-                    {/* ۲. کارت پیش‌نمایش گام‌های بعدی و گزارش پیشرفت گام ۴-۲ */}
+                    {/* ۲. کارت ۲: شرح خدمات، ساعت کارکرد و اقلام تحویلی (گام ۴-۳) */}
+                    <InvoiceLineItemsCard
+                      items={lineItems}
+                      onAddItem={handleAddLineItem}
+                      onUpdateItem={handleUpdateLineItem}
+                      onDeleteItem={handleDeleteLineItem}
+                      onImportTimesheet={handleImportTimesheet}
+                    />
+
+                    {/* ۳. کارت پیش‌نمایش گام‌های بعدی و گزارش پیشرفت گام ۴-۳ */}
                     <Card variant="default">
                       <CardHeader>
                         <div className="flex items-center justify-between flex-wrap gap-2">
                           <div className="flex items-center gap-2">
-                            <CardTitle>گام ۴-۲: کارت مشخصات کارفرما و متادیتا (InvoiceMetadataCard.jsx)</CardTitle>
-                            <Badge variant="paid">گام دوم تکمیل شد ✓</Badge>
+                            <CardTitle>گام ۴-۳: جدول تعاملی خدمات و اقلام (InvoiceLineItemsCard.jsx)</CardTitle>
+                            <Badge variant="paid">گام سوم تکمیل شد ✓</Badge>
                           </div>
-                          <Badge variant="live">آماده گام ۴-۳ (جدول آیتم‌ها)</Badge>
+                          <Badge variant="live">محاسبه زنده سطرها فعال است ⚡</Badge>
                         </div>
                         <CardDescription>
-                          کارت ۱ با انتخابگر داینامیک کارفرمایان استودیو، پروژه‌های تعریف‌شده، سریال سیستمی، کد PO و تاریخ‌های شمسی با موفقیت مستقر شد.
+                          جدول اقلام با قابلیت افزودن سطر نو، ویرایش آنی ساعت و نرخ، حذف سطر و محاسبه لحظه‌ای مبالغ در صندوق با موفقیت پیاده‌سازی شد.
                         </CardDescription>
                       </CardHeader>
 
                       <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
-                            <span className="w-6 h-6 rounded-md bg-retro-mint border border-black flex items-center justify-center font-black text-xs">
-                              ۲
+                            <span className="w-6 h-6 rounded-md bg-retro-lavender border border-black flex items-center justify-center font-black text-xs">
+                              ۳
                             </span>
-                            <h4 className="font-black text-xs text-black">کارت ۲ (گام بعدی ۴-۳)</h4>
+                            <h4 className="font-black text-xs text-black">کارت ۳ (گام بعدی ۴-۴)</h4>
                             <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              جدول داینامیک خدمات و اقلام، ساعت کارکرد، نرخ ساعتی و محاسبه لحظه‌ای سطرها.
+                              یادداشت‌های حقوقی، شرایط تسویه و کارت استعلام شبای بانکی با دکمه کپی فوری.
                             </p>
                           </div>
 
                           <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
-                            <span className="w-6 h-6 rounded-md bg-retro-lavender border border-black flex items-center justify-center font-black text-xs">
-                              ۳
+                            <span className="w-6 h-6 rounded-md bg-retro-yellow border border-black flex items-center justify-center font-black text-xs">
+                              ۴
                             </span>
-                            <h4 className="font-black text-xs text-black">کارت ۳ (گام ۴-۴)</h4>
+                            <h4 className="font-black text-xs text-black">سایدبار صندوق (گام ۴-۵)</h4>
                             <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              یادداشت‌های حقوقی، شرایط تسویه و کارت استعلام شبای بانکی با دکمه کپی.
+                              سایدبار چسبان ماشین‌حساب، کنترلر تخفیف و ثبت نهایی فاکتور در استیت اصلی.
                             </p>
                           </div>
                         </div>
 
-                        <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-1">
+                        <div className="rounded-xl border-2 border-black bg-retro-mint/30 p-4 text-xs font-bold text-black space-y-1">
                           <p className="font-black">📌 وضعیت نقشه راه فاز ۴ (سازنده تعاملی فاکتور):</p>
                           <p>• ✅ گام ۴-۱: لایوت دو ستونه، ناوبری بازگشت و اتصال روت /invoices/new</p>
-                          <p>• ✅ گام ۴-۲: کارت ۱ - مشخصات کارفرما و متادیتای فاکتور (تکمیل شد)</p>
-                          <p>• ⏳ گام ۴-۳ (گام بعدی): کارت ۲ - جدول آیتم‌ها و خدمات قابل فاکتور</p>
-                          <p>• ⏳ گام ۴-۴: کارت ۳ - شرایط تسویه و کارت بانکی شبا</p>
+                          <p>• ✅ گام ۴-۲: کارت ۱ - مشخصات کارفرما و متادیتای فاکتور</p>
+                          <p>• ✅ گام ۴-۳: کارت ۲ - جدول آیتم‌ها و خدمات قابل فاکتور (تکمیل شد)</p>
+                          <p>• ⏳ گام ۴-۴ (گام بعدی): کارت ۳ - شرایط تسویه و کارت بانکی شبا</p>
                           <p>• ⏳ گام ۴-۵: سایدبار ماشین‌حساب صندوق، تخفیف و مالیات زنده</p>
                         </div>
                       </CardContent>
 
                       <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
                         <span className="text-xs font-bold text-neutral-500">
-                          پیشرفت فاز ۴: گام ۲ از ۵ تکمیل شد (۴۰٪)
+                          پیشرفت فاز ۴: گام ۳ از ۵ تکمیل شد (۶۰٪)
                         </span>
                         <Button
                           variant="outline"
@@ -682,28 +736,28 @@ export default function App() {
 
                       <div className="p-4 space-y-3 text-xs font-bold text-neutral-700">
                         <div className="flex justify-between items-center pb-2 border-b-2 border-dashed border-neutral-300">
-                          <span>جمع ناخالص خدمات:</span>
-                          <span className="font-mono font-black text-black">۴۵,۰۰۰,۰۰۰ تومان</span>
+                          <span>جمع ناخالص ({lineItems.length} قلم):</span>
+                          <span className="font-mono font-black text-black">{formatToman(grossSubtotal)} تومان</span>
                         </div>
                         <div className="flex justify-between items-center pb-2 border-b-2 border-dashed border-neutral-300">
-                          <span className="text-retro-coral font-black">تخفیف همکاری (۱۰٪):</span>
-                          <span className="font-mono font-black text-retro-coral">-۴,۵۰۰,۰۰۰ تومان</span>
+                          <span className="text-retro-coral font-black">تخفیف همکاری ({discountPercent}٪):</span>
+                          <span className="font-mono font-black text-retro-coral">-{formatToman(discountAmount)} تومان</span>
                         </div>
                         <div className="flex justify-between items-center pb-2 border-b-2 border-dashed border-neutral-300">
                           <span className="text-emerald-700">مالیات بر ارزش افزوده (۱۰٪):</span>
-                          <span className="font-mono font-black text-emerald-800">+۴,۰۵۰,۰۰۰ تومان</span>
+                          <span className="font-mono font-black text-emerald-800">+{formatToman(vatTaxAmount)} تومان</span>
                         </div>
 
                         <div className="bg-retro-yellow p-3 rounded-xl border-2 border-black shadow-[2px_2px_0_0_#000000] space-y-0.5">
                           <span className="text-[10px] font-black text-black block">مبلغ نهایی قابل پرداخت:</span>
-                          <span className="font-mono text-xl font-black text-black block">۴۴,۵۵۰,۰۰۰ تومان</span>
+                          <span className="font-mono text-xl font-black text-black block">{formatToman(finalTotalAmount)} تومان</span>
                         </div>
 
                         <Button
                           variant="default"
                           size="default"
                           className="w-full shadow-retro justify-center font-black mt-2 bg-black text-white hover:bg-neutral-800"
-                          onClick={() => setActionNotice('در گام‌های بعدی، این دکمه فاکتور را در استیت ثبت می‌کند.')}
+                          onClick={() => setActionNotice('در گام ۴-۵، این دکمه فاکتور را در ماتریس فاکتورها ثبت می‌کند.')}
                         >
                           💾 ذخیره و صدور فاکتور رسمی
                         </Button>
