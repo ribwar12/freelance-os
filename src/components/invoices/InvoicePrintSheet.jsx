@@ -607,27 +607,47 @@ export function InvoicePrintSheet({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-center">
               {/* تاییدیه دفتر کل و ماتریس QR شبیه‌سازی‌شده */}
               <div className="flex items-center gap-3">
-                <div className="w-14 h-14 bg-white border-2 border-black rounded-lg p-1 shrink-0 flex flex-col justify-between shadow-[2px_2px_0_0_#000000]">
-                  <div className="flex justify-between">
-                    <div className="w-3 h-3 bg-black"></div>
-                    <div className="w-3 h-3 bg-black"></div>
+                {/* ماتریس QR شبیه‌سازی‌شده با الگوهای یابنده استاندارد */}
+                <div className="w-16 h-16 bg-white border-2 border-black rounded-lg p-1.5 shrink-0 flex flex-col justify-between shadow-[2px_2px_0_0_#000000] select-none">
+                  <div className="flex justify-between items-start">
+                    <div className="w-4 h-4 border-2 border-black p-0.5 flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-black"></div>
+                    </div>
+                    <div className="flex gap-0.5 mt-0.5">
+                      <div className="w-1 h-1 bg-black"></div>
+                      <div className="w-1 h-1 bg-black"></div>
+                    </div>
+                    <div className="w-4 h-4 border-2 border-black p-0.5 flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-black"></div>
+                    </div>
                   </div>
-                  <div className="flex justify-center items-center">
-                    <div className="w-2 h-2 bg-retro-yellow border border-black"></div>
+
+                  <div className="flex justify-center items-center gap-1">
+                    <div className="w-1.5 h-1.5 bg-black"></div>
+                    <div className="w-2.5 h-2.5 bg-retro-yellow border border-black"></div>
+                    <div className="w-1.5 h-1.5 bg-black"></div>
                   </div>
-                  <div className="flex justify-between">
-                    <div className="w-3 h-3 bg-black"></div>
-                    <div className="w-1.5 h-1.5 bg-black self-end"></div>
+
+                  <div className="flex justify-between items-end">
+                    <div className="w-4 h-4 border-2 border-black p-0.5 flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-black"></div>
+                    </div>
+                    <div className="flex gap-0.5 mb-0.5">
+                      <div className="w-1 h-1 bg-black"></div>
+                      <div className="w-1 h-1 bg-black"></div>
+                    </div>
+                    <div className="w-2 h-2 bg-black self-end"></div>
                   </div>
                 </div>
+
                 <div className="space-y-0.5">
                   <span className="font-mono text-[11px] font-black text-black block">
-                    هش اصالت دفتر کل
+                    هش اصالت دفتر کل (Ledger Verification)
                   </span>
-                  <p className="font-mono text-[10px] text-neutral-600 truncate max-w-[140px] font-bold">
+                  <p className="font-mono text-[10px] text-neutral-600 truncate max-w-[150px] font-bold">
                     {activeInvoice.hash}
                   </p>
-                  <span className="inline-block font-mono text-[9px] text-emerald-800 font-black">
+                  <span className="inline-block font-mono text-[9px] text-emerald-800 font-black bg-retro-mint/40 px-1 py-0.5 rounded border border-emerald-800/30">
                     {activeInvoice.syncStatus}
                   </span>
                 </div>
@@ -636,30 +656,30 @@ export function InvoicePrintSheet({
               {/* امضای دیجیتال و معمار ارشد */}
               <div className="text-center border-y-2 md:border-y-0 md:border-x-2 border-black py-3 md:py-0 px-2">
                 <span className="font-mono text-[10px] font-bold text-neutral-600 block mb-0.5">
-                  امضای مجاز صاحب اثر و مجری
+                  امضای مجاز صاحب اثر و مجری (Authorized Signatory)
                 </span>
-                <div className="h-8 flex items-center justify-center font-mono text-base italic font-black text-black select-none tracking-widest">
+                <div className="h-9 flex items-center justify-center font-mono text-lg italic font-black text-black select-none tracking-widest scale-y-110">
                   Alex Moradi
                 </div>
-                <div className="w-28 h-[1.5px] bg-black mx-auto mt-0.5 mb-1"></div>
+                <div className="w-32 h-[1.5px] bg-black mx-auto mt-0.5 mb-1"></div>
                 <span className="font-mono text-[10px] text-neutral-600 font-bold block">
-                  ثبت دیجیتال: {activeInvoice.issueDate}
+                  ثبت دیجیتال: {activeInvoice.issueDate} • گواهی نماد الکترونیکی
                 </span>
               </div>
 
               {/* مهر برجسته استودیو با چرخش ۸- درجه (Official Studio Seal) */}
               <div className="flex justify-center md:justify-end">
-                <div className="relative w-24 h-24 border-[3px] border-dashed border-red-700 rounded-full flex flex-col items-center justify-center text-center p-1.5 rotate-[-8deg] shadow-[2px_2px_0_0_#b91c1c] select-none">
-                  <div className="w-full h-full border border-red-700 rounded-full flex flex-col items-center justify-center">
+                <div className="relative w-28 h-28 border-[3px] border-dashed border-red-700 rounded-full flex flex-col items-center justify-center text-center p-1.5 rotate-[-8deg] shadow-[2px_2px_0_0_#b91c1c] select-none hover:rotate-0 transition-transform">
+                  <div className="w-full h-full border-2 border-red-700 rounded-full flex flex-col items-center justify-center p-1">
                     <span className="font-mono text-[7px] font-black uppercase text-red-700 tracking-tighter">
-                      FREELANCEOS LAB
+                      FREELANCEOS DESIGN LAB
                     </span>
-                    <span className="text-red-700 text-sm leading-none">✓</span>
-                    <span className="font-mono text-[9px] font-black uppercase text-red-700 leading-none mt-0.5">
+                    <span className="text-red-700 text-sm leading-none font-black my-0.5">★ ✓ ★</span>
+                    <span className="font-mono text-[9px] font-black uppercase text-red-700 leading-none">
                       OFFICIAL SEAL
                     </span>
                     <span className="font-mono text-[7px] text-red-700 font-black mt-0.5">
-                      ۱۴۰۵ • TEHRAN
+                      ۱۴۰۵ • TEHRAN • ثبت ۴۴۰۹۱۲
                     </span>
                   </div>
                 </div>
@@ -669,7 +689,7 @@ export function InvoicePrintSheet({
             {/* پاورقی قانونی چاپ سند */}
             <div className="mt-5 pt-3 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between text-neutral-500 font-mono text-[10px] font-bold gap-2">
               <span>صورت‌حساب رسمی قابل چاپ مالیاتی • استاندارد کاغذ: A4-ISO216 • فرم IR-TAX-89</span>
-              <span className="font-black text-black">سامانه جامع FreelanceOS v2.4 • صفحه ۱ از ۱</span>
+              <span className="font-black text-black">سامانه جامع FreelanceOS v2.4 PRO • صفحه ۱ از ۱</span>
             </div>
           </footer>
         </div>
