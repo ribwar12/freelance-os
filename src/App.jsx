@@ -8,6 +8,7 @@ import { InvoiceFilters } from './components/invoices/InvoiceFilters';
 import { InvoicesTable, INITIAL_INVOICES_DATA } from './components/invoices/InvoicesTable';
 import { InvoiceShortcutsDock } from './components/invoices/InvoicePagination';
 import { CreateInvoicePage } from './components/invoices/CreateInvoicePage';
+import { InvoiceMetadataCard } from './components/invoices/InvoiceMetadataCard';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -31,6 +32,13 @@ export default function App() {
   // استیت‌های صفحه‌بندی نئوبروتال (گام ۳-۵)
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  // استیت‌های فرم صدور فاکتور جدید (فاز ۴)
+  const [newInvoiceClient, setNewInvoiceClient] = useState('digikala');
+  const [newInvoiceProject, setNewInvoiceProject] = useState('دیزاین سیستم و توکن‌ها (تحویل فاز ۲)');
+  const [newInvoicePoRef, setNewInvoicePoRef] = useState('PO-DK-9041');
+  const [newInvoiceIssueDate, setNewInvoiceIssueDate] = useState('۱۴۰۵/۰۷/۱۰');
+  const [newInvoiceDueDate, setNewInvoiceDueDate] = useState('۱۴۰۵/۰۸/۰۱');
 
   // شنودگر میانبرهای صفحه‌کلید صنعتی (N, F, /, E)
   useEffect(() => {
@@ -565,40 +573,58 @@ export default function App() {
                 currency="تومان"
                 leftDeck={
                   <div className="space-y-6">
-                    {/* کارت معرفی و وضعیت گام ۴-۱ */}
+                    {/* ۱. کارت ۱: مشخصات کارفرما و متادیتای صورت‌حساب (گام ۴-۲) */}
+                    <InvoiceMetadataCard
+                      client={newInvoiceClient}
+                      onClientChange={(val) => {
+                        setNewInvoiceClient(val);
+                        setActionNotice(`کارفرما به «${val}» تغییر یافت.`);
+                      }}
+                      project={newInvoiceProject}
+                      onProjectChange={(val) => {
+                        setNewInvoiceProject(val);
+                        setActionNotice(`پروژه به «${val}» تغییر یافت.`);
+                      }}
+                      invoiceId="INV-1405-10"
+                      poRef={newInvoicePoRef}
+                      onPoRefChange={(val) => {
+                        setNewInvoicePoRef(val);
+                        setActionNotice(`شماره قرارداد/سفارش به «${val}» تغییر یافت.`);
+                      }}
+                      issueDate={newInvoiceIssueDate}
+                      onIssueDateChange={setNewInvoiceIssueDate}
+                      dueDate={newInvoiceDueDate}
+                      onDueDateChange={setNewInvoiceDueDate}
+                      onNewClientClick={() => {
+                        navigate('/clients');
+                        setActionNotice('انتقال به بخش ثبت کارفرمای جدید');
+                      }}
+                    />
+
+                    {/* ۲. کارت پیش‌نمایش گام‌های بعدی و گزارش پیشرفت گام ۴-۲ */}
                     <Card variant="default">
                       <CardHeader>
                         <div className="flex items-center justify-between flex-wrap gap-2">
                           <div className="flex items-center gap-2">
-                            <CardTitle>گام ۴-۱: استقرار محیط کاری دو ستونه صدور فاکتور (CreateInvoicePage.jsx)</CardTitle>
-                            <Badge variant="live">فاز ۴: گام اول</Badge>
+                            <CardTitle>گام ۴-۲: کارت مشخصات کارفرما و متادیتا (InvoiceMetadataCard.jsx)</CardTitle>
+                            <Badge variant="paid">گام دوم تکمیل شد ✓</Badge>
                           </div>
-                          <Badge variant="paid">طرح گوگل استیچ فعال شد ✓</Badge>
+                          <Badge variant="live">آماده گام ۴-۳ (جدول آیتم‌ها)</Badge>
                         </div>
                         <CardDescription>
-                          زیرساخت لایوت ۱۲ ستونه بر اساس طرح Stitch: ستون فرم‌های اجرایی (۸ ستون) و ستون سایدبار چسبان صندوق حسابداری (۴ ستون).
+                          کارت ۱ با انتخابگر داینامیک کارفرمایان استودیو، پروژه‌های تعریف‌شده، سریال سیستمی، کد PO و تاریخ‌های شمسی با موفقیت مستقر شد.
                         </CardDescription>
                       </CardHeader>
 
                       <CardContent className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
-                            <span className="w-6 h-6 rounded-md bg-retro-yellow border border-black flex items-center justify-center font-black text-xs">
-                              ۱
-                            </span>
-                            <h4 className="font-black text-xs text-black">کارت ۱ (گام بعدی ۴-۲)</h4>
-                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              مشخصات کارفرما، پروژه، سریال فاکتور، کد پیگیری و تاریخ‌های شمسی.
-                            </p>
-                          </div>
-
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="p-4 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1.5">
                             <span className="w-6 h-6 rounded-md bg-retro-mint border border-black flex items-center justify-center font-black text-xs">
                               ۲
                             </span>
-                            <h4 className="font-black text-xs text-black">کارت ۲ (گام ۴-۳)</h4>
+                            <h4 className="font-black text-xs text-black">کارت ۲ (گام بعدی ۴-۳)</h4>
                             <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              جدول خدمات و اقلام، ساعت کارکرد، نرخ ساعتی و دکمه افزودن سطر.
+                              جدول داینامیک خدمات و اقلام، ساعت کارکرد، نرخ ساعتی و محاسبه لحظه‌ای سطرها.
                             </p>
                           </div>
 
@@ -608,16 +634,16 @@ export default function App() {
                             </span>
                             <h4 className="font-black text-xs text-black">کارت ۳ (گام ۴-۴)</h4>
                             <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              یادداشت‌های حقوقی، شرایط تسویه و کارت استعلام شبای بانکی.
+                              یادداشت‌های حقوقی، شرایط تسویه و کارت استعلام شبای بانکی با دکمه کپی.
                             </p>
                           </div>
                         </div>
 
                         <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-1">
-                          <p className="font-black">📌 برنامه اجرایی ۵ مرحله‌ای فاز ۴ (سازنده فاکتور):</p>
+                          <p className="font-black">📌 وضعیت نقشه راه فاز ۴ (سازنده تعاملی فاکتور):</p>
                           <p>• ✅ گام ۴-۱: لایوت دو ستونه، ناوبری بازگشت و اتصال روت /invoices/new</p>
-                          <p>• ⏳ گام ۴-۲: کارت ۱ - مشخصات کارفرما و متادیتای فاکتور</p>
-                          <p>• ⏳ گام ۴-۳: کارت ۲ - جدول آیتم‌ها و خدمات قابل فاکتور</p>
+                          <p>• ✅ گام ۴-۲: کارت ۱ - مشخصات کارفرما و متادیتای فاکتور (تکمیل شد)</p>
+                          <p>• ⏳ گام ۴-۳ (گام بعدی): کارت ۲ - جدول آیتم‌ها و خدمات قابل فاکتور</p>
                           <p>• ⏳ گام ۴-۴: کارت ۳ - شرایط تسویه و کارت بانکی شبا</p>
                           <p>• ⏳ گام ۴-۵: سایدبار ماشین‌حساب صندوق، تخفیف و مالیات زنده</p>
                         </div>
@@ -625,7 +651,7 @@ export default function App() {
 
                       <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
                         <span className="text-xs font-bold text-neutral-500">
-                          پیشرفت فاز ۴: گام ۱ از ۵ تکمیل شد (۲۰٪)
+                          پیشرفت فاز ۴: گام ۲ از ۵ تکمیل شد (۴۰٪)
                         </span>
                         <Button
                           variant="outline"
