@@ -111,10 +111,11 @@ export function InvoiceFilters({
             🔍
           </span>
           <input
+            id="invoiceSearchInput"
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
-            placeholder="جستجوی شماره فاکتور، نام شرکت کارفرما یا پروژه..."
+            placeholder="جستجوی شماره فاکتور، نام شرکت کارفرما یا پروژه... (با فشردن /)"
             className="w-full bg-white border-2 border-black rounded-xl pr-9 pl-12 py-2 text-xs md:text-sm font-semibold text-black placeholder:text-neutral-500 focus:bg-canvas focus:outline-none focus:ring-2 focus:ring-retro-yellow focus:shadow-retro-sm transition-all"
           />
           <span className="hidden sm:inline-block absolute left-2.5 font-mono text-[10px] font-bold text-neutral-600 bg-neutral-100 px-1.5 py-0.5 border border-black rounded select-none">

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
+import { InvoicePagination, toPersianDigits } from './InvoicePagination';
 
-// لیست داده‌های کامل و استاندارد فاکتورها برای جدول جامع
+// لیست داده‌های کامل و استاندارد فاکتورها برای جدول جامع (۱۳ مورد واقعی با تنوع وضعیت‌ها)
 export const INITIAL_INVOICES_DATA = [
   {
     id: 'INV-1405-09',
@@ -103,6 +104,91 @@ export const INITIAL_INVOICES_DATA = [
     status: 'paid',
     statusLabel: 'تسویه شد',
   },
+  {
+    id: 'INV-1405-02',
+    client: 'تپسی کورپوریت',
+    clientId: '#TP-771',
+    avatar: 'ت',
+    avatarBg: 'bg-retro-yellow',
+    project: 'پورتال سازمانی و گزارش سفرها',
+    milestone: 'اسپرینت تحویل نهایی',
+    issueDate: '۱۴۰۵/۰۵/۱۰',
+    dueDate: '۱۴۰۵/۰۵/۳۰',
+    amount: '۵۲,۰۰۰,۰۰۰',
+    status: 'paid',
+    statusLabel: 'تسویه شد',
+  },
+  {
+    id: 'INV-1405-01',
+    client: 'نوبیتکس اکسچنج',
+    clientId: '#NB-910',
+    avatar: 'ن',
+    avatarBg: 'bg-retro-mint',
+    project: 'بازطراحی چارت‌های تریدینگ ویو',
+    milestone: 'فاز آزمایشی بتای ۲',
+    issueDate: '۱۴۰۵/۰۷/۰۲',
+    dueDate: '۱۴۰۵/۰۷/۲۸',
+    amount: '۳۸,۰۰۰,۰۰۰',
+    status: 'pending',
+    statusLabel: 'در انتظار واریز',
+  },
+  {
+    id: 'INV-1404-98',
+    client: 'اسنپ‌فود اکسپرس',
+    clientId: '#SF-404',
+    avatar: 'ا',
+    avatarBg: 'bg-retro-coral',
+    project: 'ردیابی زنده پیک و ژئولوکیشن',
+    milestone: 'تحویل نهایی سفارشات',
+    issueDate: '۱۴۰۵/۰۴/۱۸',
+    dueDate: '۱۴۰۵/۰۵/۰۵',
+    amount: '۲۱,۰۰۰,۰۰۰',
+    status: 'paid',
+    statusLabel: 'تسویه شد',
+  },
+  {
+    id: 'INV-1404-97',
+    client: 'فیلیمو استریمینگ',
+    clientId: '#FL-612',
+    avatar: 'ف',
+    avatarBg: 'bg-retro-lavender',
+    project: 'رابط کاربری تلویزیون AndroidTV',
+    milestone: 'پروتوتایپ اولیه فاز ۲',
+    issueDate: '۱۴۰۵/۰۷/۰۵',
+    dueDate: '۱۴۰۵/۰۸/۰۱',
+    amount: '۳۴,۰۰۰,۰۰۰',
+    status: 'draft',
+    statusLabel: 'پیش‌نویس',
+  },
+  {
+    id: 'INV-1404-96',
+    client: 'زرین‌پال درگاه پرداخت',
+    clientId: '#ZP-220',
+    avatar: 'ز',
+    avatarBg: 'bg-retro-yellow',
+    project: 'درگاه چک‌اوت بازطراحی‌شده',
+    milestone: 'اسپرینت تست امنیتی',
+    issueDate: '۱۴۰۵/۰۴/۰۱',
+    dueDate: '۱۴۰۵/۰۴/۲۵',
+    amount: '۱۵,۲۰۰,۰۰۰',
+    status: 'overdue',
+    statusLabel: 'معوقه (بحرانی)',
+    isOverdue: true,
+  },
+  {
+    id: 'INV-1404-95',
+    client: 'آپارات مدیا',
+    clientId: '#AP-833',
+    avatar: 'آ',
+    avatarBg: 'bg-retro-slate',
+    project: 'پنل تولیدکنندگان محتوا و مانیتایز',
+    milestone: 'فاز عمومی‌سازی',
+    issueDate: '۱۴۰۵/۰۳/۲۰',
+    dueDate: '۱۴۰۵/۰۴/۱۵',
+    amount: '۲۹,۵۰۰,۰۰۰',
+    status: 'paid',
+    statusLabel: 'تسویه شد',
+  },
 ];
 
 export function InvoicesTable({
@@ -116,6 +202,14 @@ export function InvoicesTable({
   onMarkAsPaid,
   onBulkAction,
   onRefresh,
+  // پراپ‌های صفحه‌بندی نئوبروتال (گام ۳-۵)
+  currentPage = 1,
+  totalPages = 1,
+  totalItems = invoices.length,
+  itemsPerPage = 5,
+  onPageChange,
+  onItemsPerPageChange,
+  showPagination = true,
 }) {
   const allSelected = invoices.length > 0 && selectedIds.length === invoices.length;
   const isIndeterminate = selectedIds.length > 0 && selectedIds.length < invoices.length;
@@ -129,7 +223,7 @@ export function InvoicesTable({
             ماتریس زنده حساب‌های دریافتنی
           </span>
           <span className="font-mono text-[10px] bg-white px-2 py-0.5 rounded border border-black shadow-[1px_1px_0px_#000000]">
-            {invoices.length} فاکتور از ۴۲ مورد
+            {toPersianDigits(invoices.length)} فاکتور در این صفحه از {toPersianDigits(totalItems)} مورد
           </span>
         </div>
 
@@ -363,6 +457,19 @@ export function InvoicesTable({
           </tbody>
         </table>
       </div>
+
+      {/* ۵. نوار صفحه‌بندی نئوبروتال (گام ۳-۵) */}
+      {showPagination && (
+        <InvoicePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          selectedCount={selectedIds.length}
+          onPageChange={onPageChange}
+          onItemsPerPageChange={onItemsPerPageChange}
+        />
+      )}
     </div>
   );
 }

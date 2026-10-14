@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { DashboardPage } from './components/dashboard/DashboardPage';
@@ -6,6 +6,7 @@ import { InvoicesPage } from './components/invoices/InvoicesPage';
 import { InvoiceSummaryStrip } from './components/invoices/InvoiceSummaryStrip';
 import { InvoiceFilters } from './components/invoices/InvoiceFilters';
 import { InvoicesTable, INITIAL_INVOICES_DATA } from './components/invoices/InvoicesTable';
+import { InvoiceShortcutsDock } from './components/invoices/InvoicePagination';
 import { Button } from './components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
 import { Badge } from './components/ui/Badge';
@@ -25,6 +26,44 @@ export default function App() {
   const [invoiceClient, setInvoiceClient] = useState('all');
   const [invoiceDateRange, setInvoiceDateRange] = useState('1405_all');
   const [invoiceCurrency, setInvoiceCurrency] = useState('TOM');
+
+  // استیت‌های صفحه‌بندی نئوبروتال (گام ۳-۵)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  // شنودگر میانبرهای صفحه‌کلید صنعتی (N, F, /, E)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // اگر کاربر داخل یک فیلد متنی تایپ می‌کند، میانبر فعال نشود
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+        return;
+      }
+
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        setActionNotice('⚡ کلید میانبر [N]: آغاز فرآیند صدور فاکتور جدید');
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        const searchInput = document.getElementById('invoiceSearchInput');
+        if (searchInput) searchInput.focus();
+        setActionNotice('⚡ کلید میانبر [F]: تمرکز روی فیلترها و جستجو');
+      } else if (e.key === '/') {
+        e.preventDefault();
+        const searchInput = document.getElementById('invoiceSearchInput');
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+        setActionNotice('⚡ کلید میانبر [/]: فعال‌سازی جستجوی زنده');
+      } else if (e.key === 'e' || e.key === 'E') {
+        e.preventDefault();
+        setActionNotice('⚡ کلید میانبر [E]: خروجی گزارش مالی و دفتر کل (Export Ledger)');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // فیلتر کردن هوشمند لیست فاکتورها بر اساس استیت فیلترها و جستجو
   const filteredInvoices = invoicesList.filter((inv) => {
@@ -61,6 +100,12 @@ export default function App() {
     overdue: invoicesList.filter((i) => i.status === 'overdue').length,
     draft: invoicesList.filter((i) => i.status === 'draft').length,
   };
+
+  // محاسبات صفحه‌بندی نئوبروتال (گام ۳-۵)
+  const totalPages = Math.max(1, Math.ceil(filteredInvoices.length / itemsPerPage));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (safeCurrentPage - 1) * itemsPerPage;
+  const paginatedInvoices = filteredInvoices.slice(startIndex, startIndex + itemsPerPage);
 
   // توابع کنترل چک‌باکس‌ها و عملیات تکی و دسته‌جمعی
   const handleSelectRow = (id) => {
@@ -119,6 +164,7 @@ export default function App() {
     setInvoiceClient('all');
     setInvoiceDateRange('1405_all');
     setSelectedInvoiceIds([]);
+    setCurrentPage(1);
     setActionNotice('تمام فیلترهای صفحه فاکتورها بازنشانی شدند.');
   };
 
@@ -353,18 +399,24 @@ export default function App() {
                   statusFilter={invoiceStatus}
                   onStatusChange={(status) => {
                     setInvoiceStatus(status);
+                    setCurrentPage(1);
                     setActionNotice(`فیلتر وضعیت روی «${status}» تنظیم شد.`);
                   }}
                   searchQuery={invoiceSearch}
-                  onSearchChange={(q) => setInvoiceSearch(q)}
+                  onSearchChange={(q) => {
+                    setInvoiceSearch(q);
+                    setCurrentPage(1);
+                  }}
                   selectedClient={invoiceClient}
                   onClientChange={(client) => {
                     setInvoiceClient(client);
+                    setCurrentPage(1);
                     setActionNotice(`فیلتر کارفرما روی «${client}» تنظیم شد.`);
                   }}
                   selectedDateRange={invoiceDateRange}
                   onDateRangeChange={(range) => {
                     setInvoiceDateRange(range);
+                    setCurrentPage(1);
                     setActionNotice(`بازه زمانی روی «${range}» تنظیم شد.`);
                   }}
                   currency={invoiceCurrency}
@@ -376,9 +428,9 @@ export default function App() {
                   onResetFilters={handleResetInvoiceFilters}
                 />
 
-                {/* ۳. جدول جامع فاکتورها با انتخاب دسته‌جمعی و چک‌باکس‌ها (گام ۳-۴) */}
+                {/* ۳. جدول جامع فاکتورها همراه با نوار صفحه‌بندی نئوبروتال (گام‌های ۳-۴ و ۳-۵) */}
                 <InvoicesTable
-                  invoices={filteredInvoices}
+                  invoices={paginatedInvoices}
                   selectedIds={selectedInvoiceIds}
                   onSelectRow={handleSelectRow}
                   onSelectAll={handleSelectAll}
@@ -390,69 +442,91 @@ export default function App() {
                   onRefresh={() => {
                     setInvoicesList(INITIAL_INVOICES_DATA);
                     setSelectedInvoiceIds([]);
+                    setCurrentPage(1);
                     setActionNotice('داده‌های جدول فاکتورها با موفقیت تازه‌سازی شدند! 🔄');
+                  }}
+                  currentPage={safeCurrentPage}
+                  totalPages={totalPages}
+                  totalItems={filteredInvoices.length}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={(page) => setCurrentPage(page)}
+                  onItemsPerPageChange={(count) => {
+                    setItemsPerPage(count);
+                    setCurrentPage(1);
                   }}
                 />
 
-                {/* ۴. کارت گزارش پیشرفت گام ۳-۴ */}
+                {/* ۴. داک دسترسی سریع و راهنمای کلیدهای میانبر کیبورد (برگرفته از طرح صنعتی Stitch) */}
+                <InvoiceShortcutsDock
+                  onNewInvoice={() => setActionNotice('⚡ کلید میانبر [N]: آغاز صدور فاکتور جدید')}
+                  onExportLedger={() => setActionNotice('⚡ کلید میانبر [E]: خروجی اکسل و دفتر کل')}
+                />
+
+                {/* ۵. کارت گزارش موفقیت و تکمیل ۱۰۰٪ فاز ۳ */}
                 <Card variant="default">
                   <CardHeader>
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">
-                        <CardTitle>گام ۳-۴: جدول جامع فاکتورها با روتینگ واقعی (InvoicesTable.jsx)</CardTitle>
-                        <Badge variant="live">فاز ۳: گام چهارم</Badge>
+                        <CardTitle>گام ۳-۵: نوار صفحه‌بندی نئوبروتال و پایان فاز ۳ (InvoicePagination.jsx)</CardTitle>
+                        <Badge variant="paid">فاز ۳: ۱۰۰٪ تکمیل شد 🎉</Badge>
                       </div>
-                      <Badge variant="paid">React Router فعال شد ✓</Badge>
+                      <Badge variant="live">آماده فاز ۴ (فرم صدور فاکتور)</Badge>
                     </div>
                     <CardDescription>
-                      سیستم روتینگ واقعی SPA فعال است: آدرس بار مرورگر روی <code>/invoices</code> تنظیم شده و دکمه بازگشت مرورگر کار می‌کند.
+                      تمام ۵ گام ماژول صورت‌حساب‌ها (Invoices) پیاده‌سازی شدند: لایه‌بندی، کارت‌های آماری، فیلتر پیشرفته، ماتریس داده‌ها با عملیات CRUD و نوار صفحه‌بندی هوشمند.
                     </CardDescription>
                   </CardHeader>
 
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                        <h4 className="font-black text-xs text-black">۱. آدرس بار واقعی مرورگر</h4>
+                        <h4 className="font-black text-xs text-black">۱. ناوبری صفحات قطور</h4>
                         <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                          با کلیک روی تب‌ها، آدرس بین <code>/</code> و <code>/invoices</code> عوض می‌شود.
+                          دکمه‌های صفحات، قبلی و بعدی با استایل چانکی نئوبروتال و اعداد مونو فارسی.
                         </p>
                       </div>
 
                       <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                        <h4 className="font-black text-xs text-black">۲. دکمه Back مرورگر</h4>
+                        <h4 className="font-black text-xs text-black">۲. گزینش تعداد در صفحه</h4>
                         <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                          با دکمه قبلی/بعدی مرورگر تاریخچه روت‌ها به درستی پیمایش می‌شود.
+                          امکان تغییر سایز صفحه (۵، ۱۰، ۲۰، ۵۰ ردیف) با محاسبه آنی اسلایس داده‌ها.
                         </p>
                       </div>
 
                       <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                        <h4 className="font-black text-xs text-black">۳. کامپوننت NavLink</h4>
+                        <h4 className="font-black text-xs text-black">۳. شمارنده ردیف‌های فعال</h4>
                         <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                          نوبار استایل فعال بودن (پس‌زمینه زرد نئوبروتال) را خودکار مدیریت می‌کند.
+                          نمایش زنده تعداد فاکتورهای چک‌باکس‌شده همراه با نشان اصالت بانکی شبا.
                         </p>
                       </div>
 
                       <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                        <h4 className="font-black text-xs text-black">۴. آماده دیپلوی استاندارد</h4>
+                        <h4 className="font-black text-xs text-black">۴. کلیدهای میانبر کیبورد</h4>
                         <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                          کانفیگ <code>vercel.json</code> برای جلوگیری از خطای ۴۰۴ در زمان رفرش اضافه شد.
+                          شنود سراسری کلیدهای N (فاکتور نو)، F (فیلتر)، / (سرچ زنده) و E (اکسپورت).
                         </p>
                       </div>
                     </div>
 
-                    <div className="rounded-xl border-2 border-black bg-retro-yellow/20 p-4 text-xs font-bold text-black space-y-1">
-                      <p className="font-black">📌 پیشرفت فاز ۳ (فهرست فاکتورها):</p>
-                      <p>• ✅ گام ۳-۱: لایه‌بندی صفحه فاکتورها و سیستم ناوبری</p>
-                      <p>• ✅ گام ۳-۲: نوار ۳ کارت خلاصه شاخص‌های مالی فاکتورها</p>
-                      <p>• ✅ گام ۳-۳: کنترل‌پنل فیلتر پیشرفته و جستجوی زنده</p>
-                      <p>• ✅ گام ۳-۴: جدول جامع فاکتورها + روتینگ کامل صنعتی React Router v6</p>
-                      <p>• ⏳ گام ۳-۵ (گام بعدی): نوار صفحه‌بندی نئوبروتال (Pagination) و پایان فاز ۳</p>
+                    <div className="rounded-xl border-2 border-black bg-retro-mint/30 p-4 text-xs font-bold text-black space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="font-black text-emerald-900">🏆 وضعیت کلی نقشه راه پروژه Freelance OS:</span>
+                        <span className="font-mono font-black text-black bg-white px-2 py-0.5 rounded border border-black">
+                          ۱۵ گام از ۲۵ گام (۶۰٪ کل پروژه)
+                        </span>
+                      </div>
+                      <p>• ✅ فاز ۱: دیزاین سیستم کامل نئوبروتال (۵ از ۵ گام - ۱۰۰٪)</p>
+                      <p>• ✅ فاز ۲: پیشخوان و داشبورد اجرایی و KPIها (۵ از ۵ گام - ۱۰۰٪)</p>
+                      <p>• ✅ فاز ۳: ماژول جامع فاکتورها، فیلترها، جدول و صفحه‌بندی (۵ از ۵ گام - ۱۰۰٪)</p>
+                      <p className="font-black text-black pt-1">
+                        • 🎯 مقصد بعدی (فاز ۴): فرم پیشرفته و تعاملی صدور فاکتور با محاسبه مالیات و تخفیف
+                      </p>
                     </div>
                   </CardContent>
 
                   <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
                     <span className="text-xs font-bold text-neutral-500">
-                      پیشرفت فاز ۳: گام ۴ از ۵ تکمیل شد (۸۰٪)
+                      پایان موفقیت‌آمیز فاز ۳ • آماده ارائه در نمایشگاه کار مهر ۲۲
                     </span>
                     <div className="flex gap-2">
                       <Button
