@@ -9,7 +9,6 @@
 [![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![React Router](https://img.shields.io/badge/React_Router-v6-CA4245?style=for-the-badge&logo=react-router&logoColor=white)](https://reactrouter.com/)
-[![License](https://img.shields.io/badge/License-MIT-A8F0D0?style=for-the-badge&logo=open-source-initiative&logoColor=black)](#-لایسنس)
 
 **پلتفرم ابری مدرن B2B SaaS با دیزاین سیستم نئوبروتالیسم (Neo-brutalism) ویژه فریلنسرها، طراحان محصول و استودیوهای خلاق ایرانی**
 
@@ -221,10 +220,6 @@ npm run preview
 * **پروژه زنده:** [freelance-os-wine.vercel.app](https://freelance-os-wine.vercel.app/)
 
 ---
-
-## 📄 لایسنس
-
-این پروژه تحت مجوز متن‌باز [MIT License](LICENSE) منتشر شده است. استفاده تجاری، شخصی و آموزشی آزاد است.
 
 <div align="center">
 
