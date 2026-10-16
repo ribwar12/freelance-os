@@ -24,8 +24,8 @@ export function ClientsPage({
               <h1 className="font-mono text-xl font-black text-black">
                 باشگاه کارفرمایان و ماتریس قراردادها
               </h1>
-              <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-full bg-retro-yellow border border-black">
-                DIR: /CLIENTS_LEDGER
+              <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-retro-yellow border border-black shadow-[1px_1px_0px_#000000]">
+                دفتر کارفرمایان
               </span>
             </div>
             <p className="text-xs font-bold text-neutral-600 mt-0.5">

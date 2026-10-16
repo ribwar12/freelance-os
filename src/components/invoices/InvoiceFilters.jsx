@@ -1,4 +1,5 @@
 import React from 'react';
+import { toPersianDigits } from './InvoicePagination';
 
 export function InvoiceFilters({
   statusFilter = 'all',
@@ -23,7 +24,7 @@ export function InvoiceFilters({
   ];
 
   const clientOptions = [
-    { id: 'all', label: 'همه کارفرمایان (۷)' },
+    { id: 'all', label: 'همه کارفرمایان' },
     { id: 'digikala', label: 'دیجی‌کالا مارکت‌پلیس' },
     { id: 'snappay', label: 'اسنپ‌پی فین‌تک' },
     { id: 'cafebazaar', label: 'کافه بازار' },
@@ -73,7 +74,7 @@ export function InvoiceFilters({
                     isActive ? 'bg-retro-yellow text-black' : 'bg-neutral-100 text-black'
                   }`}
                 >
-                  {item.count}
+                  {toPersianDigits(item.count)}
                 </span>
               </button>
             );

@@ -245,7 +245,7 @@ export function InvoicesTable({
         <div className="bg-retro-yellow border-b-2 border-black px-4 md:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 animate-fadeIn">
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs font-black bg-black text-white px-2 py-0.5 rounded border border-black">
-              {selectedIds.length} فاکتور انتخاب شد
+              {toPersianDigits(selectedIds.length)} فاکتور انتخاب شد
             </span>
             <span className="text-xs font-black text-black">
               عملیات دسته‌جمعی را انتخاب کنید:
@@ -282,6 +282,12 @@ export function InvoicesTable({
           </div>
         </div>
       )}
+
+      {/* راهنمای اسکرول افقی در موبایل */}
+      <div className="md:hidden bg-retro-yellow/20 px-4 py-1.5 text-[11px] font-bold text-neutral-700 flex items-center justify-between border-b border-black">
+        <span>👈 برای مشاهده تمام ستون‌ها، جدول را به چپ بکشید</span>
+        <span className="font-mono text-xs font-black">↔</span>
+      </div>
 
       {/* ۳. قاب جدول قابل اسکرول با بردرهای محکم */}
       <div className="w-full overflow-x-auto">

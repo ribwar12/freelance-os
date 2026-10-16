@@ -30,13 +30,13 @@ export function HeroBanner({
       </div>
 
       {/* بخش چپ: انتخاب بازه زمانی و دکمه صدور فاکتور */}
-      <div className="flex items-center gap-3 flex-wrap">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
         {/* سلکتور بازه زمانی */}
-        <div className="relative inline-flex items-center">
+        <div className="relative inline-flex items-center w-full sm:w-auto">
           <select
             value={selectedPeriod}
             onChange={(e) => onPeriodChange && onPeriodChange(e.target.value)}
-            className="appearance-none bg-white text-xs md:text-sm font-black text-black pr-4 pl-9 py-2.5 rounded-xl border-2 border-black shadow-retro-sm hover:shadow-retro focus:outline-none focus:bg-canvas cursor-pointer transition-all"
+            className="w-full sm:w-auto appearance-none bg-white text-xs md:text-sm font-black text-black pr-4 pl-9 py-2.5 rounded-xl border-2 border-black shadow-retro-sm hover:shadow-retro focus:outline-none focus:bg-canvas cursor-pointer transition-all"
           >
             <option value="current_month">این ماه (مهر ۱۴۰۵)</option>
             <option value="last_month">ماه قبل (شهریور ۱۴۰۵)</option>
@@ -52,7 +52,7 @@ export function HeroBanner({
         <Button
           variant="default"
           size="default"
-          className="shadow-retro hover:shadow-retro-lg gap-2 text-xs md:text-sm whitespace-nowrap"
+          className="shadow-retro hover:shadow-retro-lg gap-2 text-xs md:text-sm whitespace-nowrap w-full sm:w-auto justify-center"
           onClick={onNewInvoice}
         >
           <span className="text-base font-black leading-none">+</span>

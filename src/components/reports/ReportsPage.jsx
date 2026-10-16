@@ -20,8 +20,8 @@ export function ReportsPage({ onExportCsv, onPrintTaxSummary }) {
               <h1 className="font-mono text-xl font-black text-black">
                 گزارشات جامع مالی و ترازنامه استودیو
               </h1>
-              <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-full bg-retro-mint border border-black">
-                FISCAL_YEAR_1405
+              <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-retro-mint border border-black shadow-[1px_1px_0px_#000000]">
+                سال مالی ۱۴۰۵
               </span>
             </div>
             <p className="text-xs font-bold text-neutral-600 mt-0.5">

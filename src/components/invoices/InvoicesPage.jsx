@@ -33,19 +33,12 @@ export function InvoicesPage({
               همگام‌سازی مالی ۱۴۰۵: فعال
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-retro-slate border-2 border-black rounded-xl font-mono text-[11px] font-bold text-black">
-            <span>🔒 هش دفتر کل: #1405-INV-99F</span>
-          </div>
         </div>
       </div>
 
       {/* هدر اصلی صفحه و دکمه‌های اقدام کلان */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 pb-6 border-b-2 border-black">
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-retro-yellow border-2 border-black font-mono text-xs font-black shadow-retro-sm">
-            <span>📋</span>
-            <span>ماژول مستقیم امور مالی v2.4</span>
-          </div>
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-black tracking-tight font-sans">
             فهرست صورت‌حساب‌ها و فاکتورها
           </h1>

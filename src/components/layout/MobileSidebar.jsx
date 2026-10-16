@@ -83,13 +83,13 @@ export function MobileSidebar({
             </button>
           </div>
 
-          {/* نشان وضعیت دایرکتوری */}
+          {/* نوار راهنمای منوی موبایل */}
           <div className="px-4 py-2 bg-neutral-100 border-b-2 border-black flex items-center justify-between">
-            <span className="font-mono text-[10px] font-black text-neutral-600">
-              DIR: /NAV_DRAWER
+            <span className="text-[11px] font-black text-neutral-700">
+              منوی ناوبری سیستم
             </span>
-            <span className="font-mono text-[10px] font-black px-1.5 py-0.5 rounded bg-retro-mint border border-black text-black">
-              RESPONSIVE
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-retro-mint border border-black text-black shadow-[1px_1px_0px_#000000]">
+              نسخه همراه
             </span>
           </div>
 

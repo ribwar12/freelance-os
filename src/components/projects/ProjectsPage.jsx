@@ -24,8 +24,8 @@ export function ProjectsPage({
               <h1 className="font-mono text-xl font-black text-black">
                 پایپ‌لاین پروژه‌ها و اسپرینت‌ها
               </h1>
-              <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-full bg-retro-lavender border border-black">
-                SPRINT TRACK 1405
+              <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-retro-lavender border border-black shadow-[1px_1px_0px_#000000]">
+                اسپرینت‌های فعال ۱۴۰۵
               </span>
             </div>
             <p className="text-xs font-bold text-neutral-600 mt-0.5">
