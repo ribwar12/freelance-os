@@ -59,10 +59,9 @@ export function Navbar({ onNewInvoice, onNewClient }) {
                 to={item.path}
                 end={item.end}
                 className={({ isActive }) =>
-                  `px-3.5 py-1.5 rounded-xl text-xs md:text-sm font-black border-2 border-black transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-retro-yellow text-black shadow-retro-sm'
-                      : 'bg-white text-black hover:bg-neutral-100 shadow-none'
+                  `px-3.5 py-1.5 rounded-xl text-xs md:text-sm font-black border-2 border-black transition-all cursor-pointer ${isActive
+                    ? 'bg-retro-yellow text-black shadow-retro-sm'
+                    : 'bg-white text-black hover:bg-neutral-100 shadow-none'
                   }`
                 }
               >
@@ -100,7 +99,7 @@ export function Navbar({ onNewInvoice, onNewClient }) {
             </div>
             <div className="flex flex-col text-right">
               <span className="text-[11px] font-black leading-tight text-black">
-                الکس مرادی
+                ریبوار
               </span>
               <span className="text-[9px] font-mono font-bold text-emerald-700 tracking-wider">
                 مدیر سیستم

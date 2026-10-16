@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '../ui/Button';
 
 export function HeroBanner({
-  userName = 'الکس مرادی',
+  userName = ' ریبوار',
   sprintLabel = 'اسپرینت مهر ۱۴۰۵',
   selectedPeriod = 'current_month',
   onPeriodChange,
