@@ -17,9 +17,6 @@ import { AddClientModal, AddProjectModal } from './components/modals/Operational
 import { ClientsPage } from './components/clients/ClientsPage';
 import { ProjectsPage } from './components/projects/ProjectsPage';
 import { ReportsPage } from './components/reports/ReportsPage';
-import { Button } from './components/ui/Button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/Card';
-import { Badge } from './components/ui/Badge';
 
 /**
  * کامپوننت محفظه روت داینامیک برگه چاپی رسمی A4 بر مبنای شناسه فاکتور (/invoices/:id/print)
@@ -719,92 +716,6 @@ export default function App() {
                   onNewInvoice={() => setActionNotice('⚡ کلید میانبر [N]: آغاز صدور فاکتور جدید')}
                   onExportLedger={() => setActionNotice('⚡ کلید میانبر [E]: خروجی اکسل و دفتر کل')}
                 />
-
-                {/* ۵. کارت گزارش موفقیت و تکمیل ۱۰۰٪ فاز ۳ */}
-                <Card variant="default">
-                  <CardHeader>
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-2">
-                        <CardTitle>گام ۳-۵: نوار صفحه‌بندی نئوبروتال و پایان فاز ۳ (InvoicePagination.jsx)</CardTitle>
-                        <Badge variant="paid">فاز ۳: ۱۰۰٪ تکمیل شد 🎉</Badge>
-                      </div>
-                      <Badge variant="live">آماده فاز ۴ (فرم صدور فاکتور)</Badge>
-                    </div>
-                    <CardDescription>
-                      تمام ۵ گام ماژول صورت‌حساب‌ها (Invoices) پیاده‌سازی شدند: لایه‌بندی، کارت‌های آماری، فیلتر پیشرفته، ماتریس داده‌ها با عملیات CRUD و نوار صفحه‌بندی هوشمند.
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                      <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                        <h4 className="font-black text-xs text-black">۱. ناوبری صفحات قطور</h4>
-                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                          دکمه‌های صفحات، قبلی و بعدی با استایل چانکی نئوبروتال و اعداد مونو فارسی.
-                        </p>
-                      </div>
-
-                      <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                        <h4 className="font-black text-xs text-black">۲. گزینش تعداد در صفحه</h4>
-                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                          امکان تغییر سایز صفحه (۵، ۱۰، ۲۰، ۵۰ ردیف) با محاسبه آنی اسلایس داده‌ها.
-                        </p>
-                      </div>
-
-                      <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                        <h4 className="font-black text-xs text-black">۳. شمارنده ردیف‌های فعال</h4>
-                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                          نمایش زنده تعداد فاکتورهای چک‌باکس‌شده همراه با نشان اصالت بانکی شبا.
-                        </p>
-                      </div>
-
-                      <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                        <h4 className="font-black text-xs text-black">۴. کلیدهای میانبر کیبورد</h4>
-                        <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                          شنود سراسری کلیدهای N (فاکتور نو)، F (فیلتر)، / (سرچ زنده) و E (اکسپورت).
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="rounded-xl border-2 border-black bg-retro-mint/30 p-4 text-xs font-bold text-black space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-black text-emerald-900">🏆 وضعیت کلی نقشه راه پروژه Freelance OS:</span>
-                        <span className="font-mono font-black text-black bg-white px-2 py-0.5 rounded border border-black">
-                          ۱۵ گام از ۲۵ گام (۶۰٪ کل پروژه)
-                        </span>
-                      </div>
-                      <p>• ✅ فاز ۱: دیزاین سیستم کامل نئوبروتال (۵ از ۵ گام - ۱۰۰٪)</p>
-                      <p>• ✅ فاز ۲: پیشخوان و داشبورد اجرایی و KPIها (۵ از ۵ گام - ۱۰۰٪)</p>
-                      <p>• ✅ فاز ۳: ماژول جامع فاکتورها، فیلترها، جدول و صفحه‌بندی (۵ از ۵ گام - ۱۰۰٪)</p>
-                      <p className="font-black text-black pt-1">
-                        • 🎯 مقصد بعدی (فاز ۴): فرم پیشرفته و تعاملی صدور فاکتور با محاسبه مالیات و تخفیف
-                      </p>
-                    </div>
-                  </CardContent>
-
-                  <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
-                    <span className="text-xs font-bold text-neutral-500">
-                      پایان موفقیت‌آمیز فاز ۳ • آماده ارائه در نمایشگاه کار مهر ۲۲
-                    </span>
-                    <div className="flex gap-2 flex-wrap">
-                      <Button
-                        variant="default"
-                        size="sm"
-                        onClick={() => navigate('/invoices/new')}
-                        className="bg-black text-white hover:bg-neutral-800 shadow-retro"
-                      >
-                        ورود به فاز ۴: صدور فاکتور جدید 🚀
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => navigate('/')}
-                      >
-                        بازگشت به پیشخوان اصلی ↶
-                      </Button>
-                    </div>
-                  </CardFooter>
-                </Card>
               </InvoicesPage>
             }
           />
@@ -860,83 +771,6 @@ export default function App() {
                       onNotesChange={setNewInvoiceNotes}
                       onCopyFeedback={setActionNotice}
                     />
-
-                    {/* ۴. کارت گزارش موفقیت و تکمیل ۱۰۰٪ فاز ۴ */}
-                    <Card variant="default">
-                      <CardHeader>
-                        <div className="flex items-center justify-between flex-wrap gap-2">
-                          <div className="flex items-center gap-2">
-                            <CardTitle>گام ۴-۵: سایدبار ماشین‌حساب صندوق و ثبت نهایی فاکتور (InvoiceReceiptSidebar.jsx)</CardTitle>
-                            <Badge variant="paid">فاز ۴: ۱۰۰٪ تکمیل شد 🎉</Badge>
-                          </div>
-                          <Badge variant="live">آماده فاز ۵ (برگه چاپی A4)</Badge>
-                        </div>
-                        <CardDescription>
-                          هر ۵ گام سازنده تعاملی فاکتور پیاده‌سازی شدند: لایوت دو ستونه، متادیتا، جدول داینامیک اقلام، شرایط تسویه بانکی و سایدبار چسبان صندوق حسابداری با ثبت قطعی در جدول.
-                        </CardDescription>
-                      </CardHeader>
-
-                      <CardContent className="space-y-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                          <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                            <h4 className="font-black text-xs text-black">۱. محاسبات بلادرنگ</h4>
-                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              محاسبه آنی جمع سطرها، کسر تخفیف، اعمال ۱۰٪ مالیات و معادل ریالی.
-                            </p>
-                          </div>
-
-                          <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                            <h4 className="font-black text-xs text-black">۲. کنترلر تخفیف و VAT</h4>
-                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              سوئیچ فعال/غیرفعال مالیات ارزش افزوده و دراپ‌داون درصدهای تخفیف.
-                            </p>
-                          </div>
-
-                          <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                            <h4 className="font-black text-xs text-black">۳. ثبت رسمی در ماتریس</h4>
-                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              با زدن «ذخیره و صدور»، فاکتور بلافاصله به اول لیست فاکتورها تزریق می‌شود.
-                            </p>
-                          </div>
-
-                          <div className="p-3.5 rounded-xl border-2 border-black bg-white shadow-retro-sm space-y-1">
-                            <h4 className="font-black text-xs text-black">۴. شاخص خوش‌حسابی</h4>
-                            <p className="text-[11px] text-neutral-600 font-bold leading-relaxed">
-                              نمایش وضعیت اعتباری و پرداخت به‌موقع کارفرمای انتخاب‌شده.
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="rounded-xl border-2 border-black bg-retro-mint/30 p-4 text-xs font-bold text-black space-y-1.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-black text-emerald-900">🏆 وضعیت کلی نقشه راه پروژه Freelance OS:</span>
-                            <span className="font-mono font-black text-black bg-retro-mint px-2 py-0.5 rounded border border-black shadow-[2px_2px_0_0_#000000]">
-                              ۲۵ گام از ۲۵ گام (۱۰۰٪ تکمیل - آماده پرزنتیشن)
-                            </span>
-                          </div>
-                          <p>• ✅ فاز ۱: دیزاین سیستم کامل نئوبروتال (۵ از ۵ گام - ۱۰۰٪)</p>
-                          <p>• ✅ فاز ۲: پیشخوان و داشبورد اجرایی و KPIها (۵ از ۵ گام - ۱۰۰٪)</p>
-                          <p>• ✅ فاز ۳: ماژول جامع فاکتورها، فیلترها و صفحه‌بندی (۵ از ۵ گام - ۱۰۰٪)</p>
-                          <p>• ✅ فاز ۴: سازنده تعاملی فاکتور، اقلام، شبا و صندوق زنده (۵ از ۵ گام - ۱۰۰٪)</p>
-                          <p>• ✅ فاز ۵: برگه رسمی چاپی A4، خروجی PDF، مودال‌های عملیاتی و پولیش نهایی (۵ از ۵ گام - ۱۰۰٪)</p>
-                        </div>
-                      </CardContent>
-
-                      <CardFooter className="justify-between border-t border-neutral-200 pt-4 flex-wrap gap-2">
-                        <span className="text-xs font-black text-emerald-800">
-                          🎉 تمام ۲۵ گام پروژه با موفقیت به پایان رسید • آماده نمایشگاه کار ۲۲ مهر
-                        </span>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => navigate('/invoices')}
-                          >
-                            مشاهده جدول فاکتورها ↶
-                          </Button>
-                        </div>
-                      </CardFooter>
-                    </Card>
                   </div>
                 }
                 rightDeck={
