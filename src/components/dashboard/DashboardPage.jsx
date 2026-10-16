@@ -27,7 +27,7 @@ export function DashboardPage({
     <div className="space-y-6">
       {/* ۱. بنر خوش‌آمدگویی داشبورد (فاز ۲ گام ۲) */}
       <HeroBanner
-        userName="الکس مرادی"
+        userName="ریبوار دباله"
         sprintLabel="اسپرینت مهر ۱۴۰۵"
         selectedPeriod={period}
         onPeriodChange={(newPeriod) => {

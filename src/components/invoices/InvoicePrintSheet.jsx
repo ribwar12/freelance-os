@@ -75,7 +75,7 @@ export function InvoicePrintSheet({
     rialAmount: 445500000,
     sheba: 'IR82 0560 0840 8000 0124 5592 01',
     cardNumber: '6219 8610 4421 9083',
-    beneficiary: 'الکس مرادی',
+    beneficiary: 'ریبوار دباله',
     bank: 'بانک سامان (شعبه مرکزی تهران)',
     memo: 'INV-1405-10',
     hash: 'SHA-256: 7f8a9e4b21c0b784',
@@ -237,8 +237,8 @@ export function InvoicePrintSheet({
 
                 <div className="space-y-1 text-xs text-neutral-800 font-bold">
                   <p className="font-black text-black text-sm flex items-center gap-1.5">
-                    <span>الکس مرادی — معمار ارشد سیستم‌های دیزاین و نرم‌افزار</span>
-                    <span className="text-[10px] text-neutral-500 font-mono font-normal">(Alex Moradi)</span>
+                    <span>ریبوار دباله — معمار ارشد سیستم‌های دیزاین و نرم‌افزار</span>
+                    <span className="text-[10px] text-neutral-500 font-mono font-normal">(Ribwar Debale)</span>
                   </p>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-neutral-600 mt-1">
                     <span>
@@ -255,7 +255,7 @@ export function InvoicePrintSheet({
                     تهران، بلوار نلسون ماندلا (جردن)، برج فناوری، طبقه ۴، واحد ۴۰۲
                   </p>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] text-neutral-600">
-                    <span>alex@freelanceos.design</span>
+                    <span>ribwar@freelanceos.design</span>
                     <span>۰۲۱-۸۸۷۲۹۱۰۰</span>
                     <span>کد پستی: ۱۹۱۷۷-۳۸۱۱۲</span>
                   </div>
@@ -327,7 +327,7 @@ export function InvoicePrintSheet({
                 </span>
               </div>
               <div className="space-y-1 text-xs">
-                <p className="font-black text-black text-sm">الکس مرادی</p>
+                <p className="font-black text-black text-sm">ریبوار دباله</p>
                 <p className="font-bold text-neutral-600">استودیو طراحی سیستم‌های نرم‌افزاری FreelanceOS</p>
                 <div className="pt-2 font-mono text-[11px] space-y-1 text-neutral-700 font-bold">
                   <div className="flex justify-between items-center bg-canvas p-1.5 rounded border border-black/40">
@@ -659,7 +659,7 @@ export function InvoicePrintSheet({
                   امضای مجاز صاحب اثر و مجری (Authorized Signatory)
                 </span>
                 <div className="h-9 flex items-center justify-center font-mono text-lg italic font-black text-black select-none tracking-widest scale-y-110">
-                  Alex Moradi
+                  Ribwar Debale
                 </div>
                 <div className="w-32 h-[1.5px] bg-black mx-auto mt-0.5 mb-1"></div>
                 <span className="font-mono text-[10px] text-neutral-600 font-bold block">

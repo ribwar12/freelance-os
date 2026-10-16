@@ -12,7 +12,7 @@ export function InvoicePaymentNotesCard({
   notes = DEFAULT_PAYMENT_TERMS,
   onNotesChange,
   bankName = 'بانک سامان — حساب جاری عملیاتی استودیو',
-  accountHolder = 'الکس مرادی (مدیر اجرایی FreelanceOS)',
+  accountHolder = 'ریبوار دباله (مدیر اجرایی FreelanceOS)',
   sheba = 'IR82 0560 0840 8000 0124 5592 01',
   cardNumber = '6219 8610 4421 9083',
   onCopyFeedback,

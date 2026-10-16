@@ -155,11 +155,11 @@ export function MobileSidebar({
         <div className="p-4 bg-canvas border-t-2 border-black">
           <div className="flex items-center gap-3 p-2.5 rounded-xl border-2 border-black bg-white shadow-[2px_2px_0_0_#000000]">
             <div className="h-9 w-9 rounded-lg bg-retro-mint border border-black flex items-center justify-center font-black text-sm">
-              ک
+              ر
             </div>
             <div className="flex flex-col text-right">
               <span className="text-xs font-black leading-tight text-black">
-                الکس مرادی
+                ریبوار دباله
               </span>
               <span className="text-[10px] font-mono font-bold text-emerald-800">
                 مدیر سیستم • فعال

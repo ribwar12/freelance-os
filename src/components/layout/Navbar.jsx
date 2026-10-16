@@ -95,11 +95,11 @@ export function Navbar({ onNewInvoice, onNewClient }) {
           {/* کپسول مشخصات کاربر در دسکتاپ */}
           <div className="hidden lg:flex items-center gap-2 rounded-xl border-2 border-black bg-white px-2.5 py-1 shadow-retro-sm select-none">
             <div className="h-7 w-7 rounded-lg bg-retro-mint border border-black flex items-center justify-center font-black text-xs">
-              ک
+              ر
             </div>
             <div className="flex flex-col text-right">
               <span className="text-[11px] font-black leading-tight text-black">
-                ریبوار
+                ریبوار دباله
               </span>
               <span className="text-[9px] font-mono font-bold text-emerald-700 tracking-wider">
                 مدیر سیستم
